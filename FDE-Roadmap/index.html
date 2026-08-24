@@ -1,0 +1,1604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Aditya Upadhyay's guide to AI Forward Deployed Engineering — the blueprint to breaking into FDE in 30 days.">
+<meta property="og:title" content="Aditya Upadhyay — Forward Deployed Engineering">
+<meta property="og:description" content="The blueprint to breaking into FDE in 30 days.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#022B72">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%23022B72'/%3E%3Ctext x='32' y='42' font-family='Arial,Helvetica,sans-serif' font-size='24' font-weight='700' letter-spacing='-1' fill='%23F3F6FB' text-anchor='middle'%3EAU%3C/text%3E%3C/svg%3E">
+<title>Aditya Upadhyay — Forward Deployed Engineering</title>
+<style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#FFFFFF;color:#171A22}img{max-width:100%}</style>
+</head>
+<body>
+<title>Aditya Upadhyay — Forward Deployed Engineering</title>
+<style>
+/* ============ tokens ============ */
+:root{
+  --paper:#FFFFFF;
+  --ink:#171A22;
+  --navy:#022B72;
+  --blue:#022B72;
+  --blue-b:#8AA6D8;      /* light navy on dark */
+  --mut:#6B7280;         /* muted grey on white */
+  --mut-d:#9FB2D4;       /* muted on navy */
+  --lite:#F3F6FB;        /* text on navy */
+  --line:rgba(2,43,114,.16);
+  --line-d:rgba(214,226,244,.24);
+  --fail:#B23A2E;
+  --ease:cubic-bezier(.22,.61,.21,1);
+  --sans:"Neue Haas Grotesk Display Pro","Neue Haas Grotesk","Suisse Int'l","Suisse Intl",Graphik,"ABC Diatype","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --hud-ink:var(--ink);
+  --hud-mut:rgba(23,26,34,.55);
+  --hud-line:rgba(2,43,114,.2);
+}
+html,body{margin:0;padding:0;background:var(--paper);}
+body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;overflow:hidden;}
+body[data-ground="dark"]{
+  --hud-ink:var(--lite);
+  --hud-mut:rgba(243,246,251,.6);
+  --hud-line:rgba(243,246,251,.28);
+}
+button{font-family:var(--sans);}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:2px;}
+
+/* ============ deck / sections ============ */
+.deck{height:100vh;height:100dvh;overflow-y:auto;}
+.sec{position:relative;height:100vh;height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;}
+.sec.g-light{background:var(--paper);color:var(--ink);}
+.sec.g-dark{background:var(--navy);color:var(--lite);}
+.wrap{position:relative;z-index:6;height:100%;box-sizing:border-box;padding:96px 7vw 64px;display:flex;flex-direction:column;}
+
+/* ============ type ============ */
+.kicker{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);}
+.g-dark .kicker{color:var(--mut-d);}
+h1,h2,h3{margin:0;font-weight:500;}
+.hero-h{font-size:clamp(56px,10.5vw,150px);line-height:.98;letter-spacing:-.028em;text-wrap:balance;}
+.h-xl{font-size:clamp(44px,7.4vw,104px);line-height:1;letter-spacing:-.04em;text-wrap:balance;}
+.h-l{font-size:clamp(30px,4.4vw,58px);line-height:1.04;letter-spacing:-.032em;text-wrap:balance;}
+.h-m{font-size:clamp(23px,2.9vw,36px);line-height:1.12;letter-spacing:-.025em;text-wrap:balance;}
+.sub{font-size:clamp(15px,1.35vw,18.5px);line-height:1.55;color:var(--mut);max-width:34em;margin:0;}
+.g-dark .sub{color:var(--mut-d);}
+.blue{color:var(--blue);}
+.g-dark .blue{color:var(--blue-b);}
+
+/* ============ reveals ============ */
+.r{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .95s var(--ease);}
+.sec.on .r{opacity:1;transform:none;}
+.sr{opacity:0;transition:opacity .75s ease;}
+.sec.on .sr{opacity:1;}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.5s ease;}
+.sec.on .draw{stroke-dashoffset:0;}
+.dl1{transition-delay:.12s}.dl2{transition-delay:.24s}.dl3{transition-delay:.38s}
+.dl4{transition-delay:.52s}.dl5{transition-delay:.68s}.dl6{transition-delay:.85s}
+.dl7{transition-delay:1.05s}.dl8{transition-delay:1.3s}.dl9{transition-delay:1.6s}
+.dl10{transition-delay:1.9s}.dl11{transition-delay:2.25s}.dl12{transition-delay:2.6s}
+.dl13{transition-delay:3s}.dl14{transition-delay:3.4s}
+.sec:not(.on) .r,.sec:not(.on) .sr,.sec:not(.on) .draw{transition-delay:0s!important;}
+
+/* ============ fixed chrome ============ */
+.hud{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:20px 28px;pointer-events:none;}
+.hud>*{pointer-events:auto;}
+.mark{user-select:none;display:flex;align-items:center;gap:10px;}
+.mark .wm{display:block;font-size:14.5px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;color:var(--hud-ink);transition:color .4s;}
+.mark-div{font-size:13px;font-weight:400;line-height:1;color:var(--hud-mut);transition:color .4s;}
+.present-btn{appearance:none;background:none;border:0;margin:0;padding:6px;display:none;align-items:center;justify-content:center;color:var(--hud-ink);opacity:.7;cursor:pointer;transition:opacity .25s,color .4s;}
+.present-btn.ready{display:flex;}
+.present-btn:hover{opacity:1;}
+.present-btn svg{display:block;width:14px;height:14px;overflow:visible;}
+.present-btn svg polyline{fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
+.present-btn .pi-collapse{display:none;}
+.present-btn.on .pi-expand{display:none;}
+.present-btn.on .pi-collapse{display:block;}
+.chapters{display:flex;gap:4px;}
+.chapters button{appearance:none;background:none;border:0;cursor:pointer;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--hud-mut);padding:6px 9px 7px;border-bottom:1px solid transparent;transition:color .35s,border-color .35s;}
+.chapters button:hover{color:var(--hud-ink);}
+.chapters button.cur{color:var(--hud-ink);border-bottom-color:var(--blue);}
+.pager{position:fixed;right:26px;bottom:24px;z-index:20;display:flex;gap:8px;}
+.pager button{width:38px;height:38px;box-sizing:border-box;border:1px solid var(--hud-line);background:transparent;color:var(--hud-ink);font-size:15px;line-height:1;cursor:pointer;transition:color .35s,border-color .35s,opacity .3s;border-radius:0;}
+.pager button:hover:not(:disabled){border-color:var(--hud-ink);}
+.pager button:disabled{opacity:.28;cursor:default;}
+/* operating-model progress rail */
+.oprail{position:fixed;left:28px;bottom:26px;z-index:20;display:flex;align-items:center;gap:14px;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;pointer-events:none;}
+.oprail.show{opacity:1;transform:none;}
+.oprail span{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);transition:color .4s;}
+.oprail span.cur{color:var(--navy);}
+.oprail em{width:16px;height:1px;background:var(--line);}
+
+/* ============ shared intelligence stage (S2–S4) ============ */
+#stage{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .6s;}
+#stage.show{opacity:1;}
+.core{position:absolute;left:50vw;top:49vh;transform:translate(-50%,-50%);text-align:center;transition:opacity .9s,transform .9s var(--ease);}
+.core-disc{width:84px;height:84px;border-radius:50%;background:var(--navy);margin:0 auto;position:relative;}
+.core-disc::after{content:"";position:absolute;inset:-16px;border:1px solid var(--line);border-radius:50%;}
+.core-label{margin-top:26px;font-size:10.5px;font-weight:600;letter-spacing:.18em;color:var(--mut);}
+#stage[data-scene="flatten"] .core,#stage[data-scene="deploy"] .core{opacity:0;transform:translate(-50%,-50%) scale(.7);}
+/* connection lines: model → industries (S2) */
+.links{position:absolute;inset:0;width:100%;height:100%;}
+.lk{stroke:var(--navy);stroke-opacity:.35;stroke-width:1;fill:none;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset 1s var(--ease),opacity .45s;}
+#stage[data-scene="spread"] .lk{opacity:1;stroke-dashoffset:0;}
+.lk1{transition-delay:.35s}.lk2{transition-delay:.5s}.lk3{transition-delay:.2s}.lk4{transition-delay:.65s}.lk5{transition-delay:.8s}
+.copy{position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--navy);opacity:0;transform:translate(calc(50vw - 50%),calc(49vh - 50%)) scale(.25);transition:transform 1.05s var(--ease),opacity .5s,background .7s,width .7s,height .7s;}
+#stage[data-scene="spread"] .copy{opacity:1;transform:translate(calc(var(--tx) - 50%),calc(65vh - 50%));width:var(--sz);height:var(--sz);}
+#stage[data-scene="flatten"] .copy{opacity:1;transform:translate(calc(var(--tx) - 50%),calc(64vh - 50%));width:20px;height:20px;background:rgba(2,43,114,.45);}
+#stage[data-scene="deploy"] .copy{opacity:1;transform:translate(calc(var(--tx) - 50%),calc(64vh - var(--bh) - 50%));width:20px;height:20px;background:var(--ink);}
+#stage[data-scene="deploy"] .copy.win{background:var(--blue);}
+.c1{--tx:10vw;--sz:22px;--bh:7vh;transition-delay:.15s}
+.c2{--tx:30vw;--sz:29px;--bh:15vh;transition-delay:.3s}
+.c3{--tx:50vw;--sz:23px;--bh:4vh;transition-delay:0s}
+.c4{--tx:70vw;--sz:27px;--bh:24vh;transition-delay:.45s}
+.c5{--tx:90vw;--sz:21px;--bh:11vh;transition-delay:.6s}
+.obar{position:absolute;left:0;top:0;width:3px;background:var(--ink);opacity:0;height:var(--bh);transform:translate(calc(var(--tx) - 50%),calc(64vh - var(--bh))) scaleY(0);transform-origin:center bottom;transition:transform 1s var(--ease),opacity .4s;}
+#stage[data-scene="deploy"] .obar{opacity:1;transform:translate(calc(var(--tx) - 50%),calc(64vh - var(--bh))) scaleY(1);}
+#stage[data-scene="deploy"] .obar.win{background:var(--blue);}
+.bline{position:absolute;left:6vw;right:6vw;top:64vh;height:1px;background:var(--line);transform:scaleX(0);transition:transform 1.3s var(--ease) .2s;}
+#stage[data-scene="flatten"] .bline,#stage[data-scene="deploy"] .bline{transform:scaleX(1);}
+.bnote{position:absolute;left:6vw;top:calc(64vh - 34px);font-size:10.5px;font-weight:600;letter-spacing:.16em;color:var(--mut);opacity:0;transition:opacity .8s .9s;}
+#stage[data-scene="flatten"] .bnote{opacity:1;}
+#stage[data-scene="deploy"] .bnote{opacity:0;transition-delay:0s;}
+.firm{position:absolute;top:68.5vh;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .7s ease .5s,color .7s;}
+#stage[data-scene] .firm{opacity:1;}
+.firm b{display:block;width:1px;height:10px;background:var(--line);margin:0 auto 8px;}
+.firm span{font-size:10.5px;font-weight:600;letter-spacing:.15em;color:var(--mut);transition:color .7s;}
+#stage[data-scene="deploy"] .firm.win span{color:var(--blue);}
+.f1{left:10vw}.f2{left:30vw}.f3{left:50vw}.f4{left:70vw}.f5{left:90vw}
+/* quiet ROI label (S4) — rotated, centered on the y axis */
+.ylab{position:absolute;left:6vw;top:50vh;transform:translate(-50%,-50%) rotate(-90deg);font-size:10.5px;font-weight:600;letter-spacing:.16em;color:var(--mut);opacity:0;transition:opacity .8s .9s;}
+#stage[data-scene="deploy"] .ylab{opacity:1;}
+
+/* ============ S1 opening ============ */
+#s01 .wrap{align-items:center;justify-content:center;text-align:center;}
+#s01 .hero-h{color:var(--navy);}
+#s01 .sub{margin-top:34px;}
+.cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:10.5px;font-weight:600;letter-spacing:.22em;color:var(--mut);animation:cue 2.6s ease-in-out infinite;}
+@keyframes cue{0%,100%{transform:translate(-50%,0);opacity:.75}50%{transform:translate(-50%,7px);opacity:.4}}
+
+/* ============ S2–S4 text layers ============ */
+#s02 .wrap{align-items:flex-start;padding-top:13vh;}
+#s02 .h-l{max-width:11em;}
+#s02 .sub{margin-top:22px;}
+#s03 .wrap{align-items:center;text-align:center;padding-top:11vh;}
+#s03 .h-l{max-width:15em;}
+#s04 .wrap{align-items:center;text-align:center;padding-top:9vh;}
+#s04 .prompt{font-size:clamp(19px,2vw,25px);letter-spacing:-.015em;color:var(--mut);font-weight:500;}
+#s04 .h-xl{margin-top:14px;}
+#s04 .principle{position:absolute;bottom:10vh;left:0;right:0;text-align:center;}
+#s04 .principle p{margin:0 auto;max-width:38em;padding:0 12vw;}
+
+/* ============ S5 the FDE appears ============ */
+#s05 .wrap{justify-content:center;max-width:1280px;margin:0 auto;}
+#s05 .lead{font-size:clamp(19px,2vw,25px);color:var(--mut-d);font-weight:500;letter-spacing:-.015em;}
+#s05 .h-l{margin-top:16px;max-width:14em;}
+.chain{display:flex;align-items:stretch;gap:0;margin-top:7vh;flex-wrap:wrap;}
+.chain .node{border-top:1px solid var(--line-d);padding:22px 0 0;min-width:230px;flex:1;}
+.chain .node .nglyph{display:block;width:156px;height:55px;margin:6px 0 20px;}
+.nglyph path,.nglyph polyline{stroke:var(--mut-d);stroke-width:1.5;fill:none;}
+.nglyph circle{fill:var(--mut-d);}
+.nglyph rect{fill:var(--mut-d);}
+.nglyph rect:last-of-type{fill:var(--blue-b);}
+.chain .node.hot .nglyph path{stroke:var(--blue-b);}
+.chain .node.hot .nglyph circle{fill:var(--blue-b);}
+.chain .node b{display:block;font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;}
+.chain .node p{margin:9px 0 0;font-size:15px;line-height:1.55;color:var(--mut-d);max-width:17em;}
+.chain .node.hot{border-top:2px solid var(--blue-b);}
+.chain .node.hot b{color:var(--blue-b);}
+.chain .arr{align-self:flex-start;padding:14px 26px 0;font-size:22px;color:var(--mut-d);}
+#s05 .sub{margin-top:6vh;}
+#s05 .lead,#s05 .sub,#s05 .chain .node b,#s05 .chain .node p,#s05 .chain .node.hot b{color:#FFFFFF;}
+
+/* ============ S6 split screen ============ */
+#s06 .wrap{align-items:center;justify-content:center;padding-top:64px;}
+.split{position:relative;width:min(980px,88vw);margin-top:5.5vh;}
+.split-h{display:grid;grid-template-columns:1fr 130px 1fr;margin-bottom:26px;}
+.split-h span{font-size:10.5px;font-weight:600;letter-spacing:.18em;color:var(--mut);}
+.split-h span:first-child{text-align:right;}
+.split-h span:last-child{text-align:left;}
+.srow{display:grid;grid-template-columns:1fr 130px 1fr;align-items:center;min-height:44px;}
+.srow>span{font-size:clamp(16px,1.7vw,21px);font-weight:500;letter-spacing:-.015em;}
+.srow>span:first-child{text-align:right;}
+.srows{position:relative;}
+.srows .conv{position:absolute;left:50%;top:0;transform:translateX(-50%);width:130px;height:100%;overflow:visible;}
+.srows .conv path{stroke:rgba(2,43,114,.35);stroke-width:1.2;fill:none;vector-effect:non-scaling-stroke;}
+.fdenode{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);width:66px;height:66px;border-radius:50%;background:var(--paper);border:1.5px solid var(--navy);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;letter-spacing:.12em;opacity:0;transition:opacity .6s,transform .7s var(--ease);}
+.sec.on .fdenode{opacity:1;transform:translate(-50%,-50%) scale(1);transition-delay:1.05s;}
+#s06 .revline{margin-top:6vh;font-size:clamp(21px,2.5vw,31px);font-weight:500;letter-spacing:-.02em;text-align:center;}
+#s06 .revline em{font-style:normal;color:var(--blue);}
+
+/* ============ S7 / S8 workflow diagrams ============ */
+#s07 .wrap,#s08 .wrap{padding-top:10vh;}
+#s07 .sub{margin-top:14px;}
+.diag{width:min(1080px,90vw);margin:3.5vh auto 0;display:block;height:auto;}
+.diag text{font-family:var(--sans);}
+.nlabel{font-size:15px;font-weight:500;fill:var(--ink);}
+#s07 .nlabel{fill:var(--mut);}
+.nsub{font-size:12px;fill:var(--mut);}
+.nbox{fill:none;stroke:var(--navy);stroke-width:1.1;}
+.anno{font-size:12px;fill:var(--mut);}
+.trace{stroke:var(--blue);stroke-width:1.8;fill:none;}
+/* s07 · clickable step flow */
+.s07flow{display:flex;align-items:stretch;justify-content:center;gap:0;max-width:1080px;margin:6vh auto 0;}
+.stepcard{position:relative;flex:1 1 0;min-width:0;box-sizing:border-box;background:var(--paper);border:1px solid var(--line);padding:17px 15px 15px;text-align:left;font-family:var(--sans);cursor:pointer;display:flex;flex-direction:column;gap:9px;min-height:132px;transition:border-color .25s,box-shadow .25s,transform .25s;}
+.stepcard:hover,.stepcard:focus-visible{border-color:var(--navy);box-shadow:0 8px 24px rgba(2,43,114,.12);transform:translateY(-3px);outline:none;}
+.stepnum{font-size:10.5px;font-weight:700;letter-spacing:.16em;color:var(--navy);opacity:.55;}
+.steptext{font-size:14.5px;font-weight:500;line-height:1.24;color:var(--ink);letter-spacing:-.005em;}
+.stepnote{margin-top:auto;font-size:11px;color:var(--mut);letter-spacing:.02em;}
+.stepplus{position:absolute;top:11px;right:12px;width:17px;height:17px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;color:var(--mut);transition:color .25s,border-color .25s,background .25s;}
+.stepcard:hover .stepplus,.stepcard:focus-visible .stepplus{color:#fff;background:var(--navy);border-color:var(--navy);}
+.steparrow{flex:0 0 auto;align-self:center;color:var(--navy);opacity:.35;font-size:15px;padding:0 7px;}
+.s07trace{display:flex;align-items:center;gap:12px;max-width:1080px;margin:16px auto 0;}
+.s07trace .ln{flex:1;height:1px;background:var(--navy);opacity:.3;}
+.s07trace .lb{white-space:nowrap;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--navy);}
+.s07hint{text-align:center;margin:24px auto 0;font-size:12.5px;color:var(--mut);}
+@media(max-width:820px){.s07flow{flex-wrap:wrap;gap:10px;}.stepcard{flex:1 1 44%;min-height:0;}.steparrow{display:none;}}
+/* step detail modal */
+.mstep{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .28s;}
+.mstep.open{opacity:1;pointer-events:auto;}
+.mstep-scrim{position:absolute;inset:0;background:rgba(9,17,36,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);}
+.mstep-card{position:relative;box-sizing:border-box;background:#fff;border:1px solid var(--line);max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:38px 40px 34px;box-shadow:0 30px 80px rgba(2,43,114,.28);transform:translateY(14px) scale(.985);transition:transform .32s var(--ease);}
+.mstep.open .mstep-card{transform:none;}
+.mstep-x{position:absolute;top:15px;right:17px;width:30px;height:30px;border:1px solid var(--line);background:none;border-radius:50%;font-size:17px;line-height:1;color:var(--mut);cursor:pointer;transition:color .2s,border-color .2s;}
+.mstep-x:hover{color:var(--navy);border-color:var(--navy);}
+.mstep-tag{display:block;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--navy);opacity:.65;}
+.mstep-title{margin:10px 0 0;font-size:26px;line-height:1.1;letter-spacing:-.02em;font-weight:600;color:var(--ink);}
+.mstep-punch{margin:13px 0 0;font-size:16px;line-height:1.45;font-weight:500;color:var(--navy);}
+.mstep-sub{margin:26px 0 0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);}
+.mstep-points{list-style:none;margin:12px 0 0;padding:0;}
+.mstep-points li{position:relative;margin:0 0 11px;padding:0 0 0 20px;font-size:14px;line-height:1.5;color:var(--ink);}
+.mstep-points li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;background:var(--navy);}
+.mstep-fde{margin:26px 0 0;padding:16px 18px;background:var(--lite);border-left:2px solid var(--navy);}
+.mstep-fde span{display:block;margin-bottom:6px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);}
+.mstep-fde p{margin:0;font-size:14px;line-height:1.5;color:var(--ink);}
+#s08 .def{margin:4vh auto 0;max-width:52em;text-align:center;font-size:clamp(16px,1.6vw,20px);line-height:1.5;color:var(--ink);}
+#s08 .def em{font-style:normal;color:var(--blue);}
+
+/* ============ S8b · watch one run (agent theater) ============ */
+#srun .wrap{padding-top:64px;align-items:center;justify-content:center;text-align:center;}
+#srun .theater{margin-top:3.5vh;}
+.theater{width:min(920px,84vw);margin:0 auto;}
+.ingest{position:relative;height:160px;margin-top:2vh;}
+.doc{position:absolute;left:0;top:20px;width:150px;box-sizing:border-box;padding:13px 14px;border:1px solid var(--line-d);background:rgba(237,242,250,.05);text-align:left;transition:transform 1.35s var(--ease);}
+.doc b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--lite);margin-bottom:9px;}
+.doc i{display:block;height:4px;background:var(--line-d);margin:7px 0;}
+.doc i.short{width:55%;}
+.doc.fly{transform:translateX(calc(min(460px,42vw) - 75px)) translateY(2px);}
+.doc.absorb{transform:translateX(calc(min(460px,42vw) - 75px)) translateY(2px) scale(.25);opacity:0;transition:transform .6s var(--ease),opacity .45s;}
+.dropzone{position:absolute;left:50%;top:20px;transform:translateX(-50%);width:232px;height:118px;border:1.5px dashed var(--line-d);display:flex;align-items:center;justify-content:center;transition:opacity .5s,border-color .4s;}
+.dropzone span{font-size:10px;font-weight:600;letter-spacing:.18em;color:var(--mut-d);}
+.dropzone.gone{opacity:0;}
+.thlede{position:absolute;left:50%;top:50%;width:min(800px,94%);margin:0;transform:translate(-50%,calc(-50% + 16px));font-size:clamp(24px,3.4vw,42px);line-height:1.14;letter-spacing:-.025em;font-weight:500;color:var(--lite);text-wrap:balance;opacity:0;transition:opacity .7s ease,transform .8s var(--ease);}
+.thlede.on{opacity:1;transform:translate(-50%,-50%);}
+.ststrip{display:flex;align-items:center;gap:14px;margin-top:4.5vh;}
+.stp{display:flex;align-items:center;gap:10px;position:relative;}
+.stp em{display:block;width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:1.5px solid rgba(159,178,212,.55);position:relative;transition:border-color .3s,background .3s;}
+.stp b{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mut-d);transition:color .3s;white-space:nowrap;}
+.stp.cur em{border-color:var(--blue-b);border-top-color:transparent;animation:thspin .9s linear infinite;}
+.stp.wait em{border-color:var(--blue-b);animation:thpulse 1.4s ease-in-out infinite;}
+.stp.done em{border-color:var(--blue-b);background:var(--blue-b);}
+.stp.done em::after{content:"\2713";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#022B72;}
+.stp.cur b,.stp.wait b,.stp.done b{color:var(--lite);}
+@keyframes thspin{to{transform:rotate(360deg)}}
+@keyframes thpulse{0%,100%{box-shadow:0 0 0 0 rgba(138,166,216,.5)}50%{box-shadow:0 0 0 8px rgba(138,166,216,0)}}
+.stln{flex:1;height:1px;background:var(--line-d);}
+.apbtn{background:var(--lite);color:var(--navy);border:0;padding:11px 30px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .4s;white-space:nowrap;}
+.apbtn.show{opacity:1;pointer-events:auto;animation:appulse 1.5s ease-in-out infinite;}
+@keyframes appulse{0%,100%{box-shadow:0 0 0 0 rgba(243,246,251,.45)}50%{box-shadow:0 0 0 11px rgba(243,246,251,0)}}
+.pbar{height:2px;background:rgba(214,226,244,.25);margin-top:18px;}
+.pbar i{display:block;height:100%;width:0;background:var(--blue-b);}
+.console{border:1px solid var(--line-d);margin-top:2.6vh;text-align:left;}
+.console header{display:block;padding:9px 14px;border-bottom:1px solid var(--line-d);font-size:10px;font-weight:600;letter-spacing:.16em;color:var(--mut-d);}
+.console .rls{padding:9px 14px 11px;height:224px;box-sizing:border-box;}
+.rl{font-size:12.5px;line-height:1.8;color:var(--mut-d);opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;}
+.rl::before{content:"\25B8";margin-right:9px;color:rgba(237,242,250,.25);}
+.rl.on{opacity:1;transform:none;}
+.rl.ok{color:var(--blue-b);}
+.rl.ok::before{content:"\2713";color:var(--blue-b);}
+.rl.wait{color:var(--lite);font-weight:500;}
+.thfoot{display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;margin-top:22px;min-height:46px;}
+.runout{margin:0;font-size:13.5px;font-weight:500;color:var(--blue-b);opacity:0;transition:opacity .5s;}
+.runout.on{opacity:1;}
+
+/* ============ S9 operating model ============ */
+#s09 .wrap{align-items:center;justify-content:center;text-align:center;}
+.opseq{display:flex;align-items:baseline;gap:clamp(14px,3vw,44px);margin-top:6vh;flex-wrap:wrap;justify-content:center;}
+.opseq .stg{text-align:left;}
+.opseq .stg b{display:block;font-size:clamp(30px,4.6vw,60px);font-weight:500;letter-spacing:-.035em;line-height:1;}
+.opseq .stg p{margin:14px 0 0;font-size:14px;line-height:1.5;color:var(--mut-d);max-width:15em;}
+.opseq .oparr{font-size:clamp(22px,3vw,38px);color:var(--mut-d);align-self:flex-start;padding-top:.35em;}
+#s09 .foot{margin-top:7vh;font-size:13px;letter-spacing:.05em;color:var(--mut-d);}
+
+/* ============ S10 audit ============ */
+#s10 .wrap{padding-top:9vh;}
+.audit-flow{display:grid;grid-template-columns:.95fr auto .85fr auto 1.3fr;gap:clamp(14px,1.8vw,30px);margin:auto;align-items:start;width:min(1280px,100%);}
+.astep{border-top:1px solid var(--line);padding-top:16px;}
+.astep.hot{border-top:2px solid var(--navy);}
+.asnum{display:flex;align-items:baseline;gap:10px;margin-bottom:20px;}
+.asnum i{font-style:normal;font-size:15px;font-weight:700;color:var(--navy);}
+.asnum b{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);}
+.aarr{align-self:start;padding-top:12px;font-size:20px;color:var(--mut);}
+.fragstack{display:flex;flex-direction:column;gap:10px;position:relative;padding-left:14px;}
+.fragstack::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:1px;background:var(--line);transform:scaleY(0);transform-origin:top;transition:transform 1s var(--ease) 1.1s;}
+.sec.on .fragstack::before{transform:scaleY(1);}
+.frag{align-self:flex-start;border:1px solid var(--line);color:var(--ink);font-size:13.5px;padding:8px 14px;white-space:nowrap;opacity:0;transform:translate(var(--sx),var(--sy)) rotate(var(--sr));transition:transform 1s var(--ease),opacity .6s;}
+.sec.on .frag{opacity:1;transform:none;}
+.findings{display:flex;flex-direction:column;gap:14px;}
+.findings span{font-size:14.5px;color:var(--ink);}
+.findings span::before{content:"";display:inline-block;width:10px;height:1.5px;background:var(--navy);margin-right:10px;vertical-align:4px;}
+.artifact{border:1px solid var(--line);align-self:center;width:100%;box-sizing:border-box;}
+.artifact header{padding:14px 18px;background:var(--navy);font-size:10.5px;font-weight:600;letter-spacing:.16em;color:#FFFFFF;}
+.artifact .row{display:grid;grid-template-columns:190px 1fr;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line);align-items:baseline;}
+.artifact .row:last-child{border-bottom:0;}
+.artifact .row b{font-size:13.5px;font-weight:600;letter-spacing:.02em;color:var(--navy);}
+.artifact .row span{font-size:13.5px;color:#5A6B87;line-height:1.5;}
+#s10 .sub{margin-top:3vh;}
+
+/* ============ S11 decision ============ */
+#s11 .wrap{align-items:center;padding-top:10vh;}
+.dgm text{font-family:var(--sans);}
+.dstem{stroke:rgba(2,43,114,.45);stroke-width:1.2;fill:none;}
+.dtitle{font-size:13.5px;font-weight:600;letter-spacing:.14em;fill:var(--ink);}
+.dwhen{font-size:13px;fill:var(--mut);}
+.droot{font-size:14px;fill:var(--mut);}
+#s11 .principle{margin-top:3vh;border-top:1px solid var(--line);padding-top:22px;width:min(760px,86vw);text-align:center;font-size:clamp(15px,1.5vw,19px);color:var(--ink);line-height:1.5;}
+
+/* ============ S12 evals ============ */
+#s12 .wrap{padding-top:8vh;}
+.eval-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(20px,2.4vw,42px);margin:auto;align-items:start;width:min(1200px,100%);}
+.cases{display:grid;grid-template-columns:1.5fr repeat(4,1fr);font-size:13.5px;border:1px solid var(--line);align-content:start;}
+.cases header{grid-column:1 / -1;padding:14px 18px;background:var(--navy);font-size:10.5px;font-weight:600;letter-spacing:.16em;color:#FFFFFF;}
+.cases>div{padding:13px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;}
+.cases .chead{font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);border-bottom-color:var(--navy);}
+.cases .cname{color:var(--ink);font-weight:500;padding-left:18px;}
+.cases .mk{justify-content:center;font-size:15px;}
+.mk.ok{color:var(--navy);}
+.mk.no{color:var(--fail);font-weight:700;}
+.mk.esc{color:var(--navy);font-size:12.5px;font-weight:600;white-space:nowrap;}
+.mk.dash{color:rgba(2,43,114,.3);}
+.legend{grid-column:1 / -1;border-bottom:0!important;font-size:11.5px;color:var(--mut);padding:14px 18px;}
+.evreport{border:1px solid var(--line);}
+.evreport header{padding:14px 18px;background:var(--navy);font-size:10.5px;font-weight:600;letter-spacing:.16em;color:#FFFFFF;}
+.evblock{padding:16px 18px 18px;border-bottom:1px solid var(--line);}
+.evblock:last-child{border-bottom:0;}
+.evlabel{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);}
+.evpassnum{display:flex;align-items:baseline;gap:12px;margin-top:10px;}
+.evpassnum b{font-size:clamp(30px,2.8vw,38px);font-weight:500;letter-spacing:-.02em;color:var(--ink);}
+.evpassnum b em{font-style:normal;font-size:16px;color:var(--mut);font-weight:500;margin-left:2px;}
+.evpassnum>span{font-size:12.5px;color:var(--mut);}
+.evbar{position:relative;height:8px;background:rgba(2,43,114,.10);margin-top:14px;}
+.evbar i{position:absolute;left:0;top:0;bottom:0;width:82%;background:var(--navy);transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease) 1s;}
+.sec.on .evbar i{transform:scaleX(1);}
+.evrow{display:grid;grid-template-columns:132px 1fr 20px;gap:10px;align-items:center;margin-top:12px;}
+.evrow span{font-size:12.5px;color:var(--ink);}
+.evrow i{display:block;height:8px;background:var(--fail);width:var(--w);transform:scaleX(0);transform-origin:left;transition:transform .9s var(--ease) 1.4s;}
+.sec.on .evrow i{transform:scaleX(1);}
+.evrow b{font-size:12.5px;font-weight:600;color:var(--mut);text-align:right;}
+.evrule{display:flex;gap:12px;align-items:baseline;margin-top:11px;}
+.evrule:first-of-type{margin-top:12px;}
+.evrule b{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--navy);min-width:86px;}
+.evrule span{font-size:12.5px;color:var(--mut);line-height:1.45;}
+
+/* ============ S13 deployment ============ */
+#s13 .wrap{padding-top:9vh;}
+.dep text{font-family:var(--sans);}
+.sat{font-size:13px;fill:var(--navy);}
+.satline{stroke:rgba(2,43,114,.35);stroke-width:1;fill:none;}
+.sysbox{fill:none;stroke:rgba(2,43,114,.5);stroke-width:1.2;stroke-dasharray:5 5;transition:stroke 1s,stroke-dasharray 1s;}
+.sec.on .w3on .sysbox{stroke:var(--navy);stroke-dasharray:none;}
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:3.5vw;margin-top:3vh;}
+.phase{border-top:1px solid var(--line);padding-top:14px;}
+.phase b{display:block;font-size:15.5px;font-weight:600;letter-spacing:.01em;color:var(--ink);}
+.phase b i{font-style:normal;color:var(--navy);margin-right:10px;font-weight:700;}
+.phase p{margin:9px 0 0;font-size:14px;line-height:1.55;color:var(--mut);max-width:30em;}
+#s13 .final{margin-top:4.5vh;font-size:clamp(15px,1.5vw,19px);color:var(--ink);line-height:1.5;text-align:center;align-self:center;max-width:40em;}
+
+/* keyframed multi-step elements for S13 */
+.sbxg{opacity:0;}
+.sec.on .sbxg{animation:sbx 5s var(--ease) forwards;}
+@keyframes sbx{0%,28%{opacity:0}40%,68%{opacity:1}88%,100%{opacity:.22}}
+.protolabel{opacity:0;}
+.sec.on .protolabel{animation:proto 5s ease forwards;}
+@keyframes proto{0%{opacity:0}10%,62%{opacity:1}76%,100%{opacity:0}}
+.prodlabel{opacity:0;}
+.sec.on .prodlabel{animation:prod 5s ease forwards;}
+@keyframes prod{0%,74%{opacity:0}88%,100%{opacity:1}}
+.w3swap{transition:opacity .8s ease;}
+
+/* ============ S14 loop ============ */
+#s14 .wrap{align-items:center;justify-content:center;text-align:center;}
+.loop{display:flex;align-items:center;gap:clamp(10px,1.8vw,26px);flex-wrap:wrap;justify-content:center;}
+.loop b{font-size:clamp(20px,2.6vw,34px);font-weight:500;letter-spacing:-.025em;}
+.loop span{font-size:clamp(16px,2vw,24px);color:var(--mut);font-weight:400;letter-spacing:-.015em;}
+.loop i{font-style:normal;color:var(--mut);font-size:clamp(15px,1.7vw,21px);}
+.loopback{width:min(680px,80vw);margin-top:6px;}
+.loopback path{stroke:rgba(2,43,114,.3);fill:none;}
+.loopback path.lbarrow{stroke:rgba(2,43,114,.55);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
+.loopback text{font-size:11px;letter-spacing:.14em;fill:var(--mut);font-family:var(--sans);}
+#s14 .h-l{margin-top:8vh;max-width:17em;}
+
+/* ============ S15–S19 · the persistent 30-day calendar ============ */
+#cal{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .6s;--ovs:.26;}
+#cal.show{opacity:1;}
+.calstrip{position:absolute;left:50vw;top:42vh;width:4728px;transform:translate(-50%,calc(-50% + 12vh)) scale(var(--ovs));transition:transform 1.25s var(--ease);}
+#cal[data-scene="w1"] .calstrip{transform:translate(calc(-50% + 1818px),-50%) scale(1);}
+#cal[data-scene="w2"] .calstrip{transform:translate(calc(-50% + 710px),-50%) scale(1);}
+#cal[data-scene="w3"] .calstrip{transform:translate(calc(-50% - 398px),-50%) scale(1);}
+#cal[data-scene="w4"] .calstrip{transform:translate(calc(-50% - 1463px),-50%) scale(.88);}
+.days{display:flex;}
+.cday{width:156px;height:190px;box-sizing:border-box;border:1px solid var(--line);margin-right:-1px;padding:13px 14px;background:var(--paper);transition:border-color .6s ease var(--dd,0s),background .8s;}
+.cday.pstart{margin-left:16px;}
+.cday i{font-style:normal;display:block;font-size:34px;font-weight:500;letter-spacing:-.02em;color:var(--ink);transition:color .8s;}
+.cday b{display:block;margin-top:7px;font-size:16px;font-weight:600;letter-spacing:-.01em;color:var(--ink);opacity:0;transition:opacity .55s ease var(--dd,0s);}
+.cday span{display:block;margin-top:6px;font-size:11.5px;line-height:1.4;color:var(--mut);opacity:0;transition:opacity .55s ease var(--dd,0s);}
+.cday.ck{border-bottom:3px solid var(--blue);}
+.cday.ck i,.cday.ck b{color:var(--blue);}
+.dd1{--dd:.2s}.dd2{--dd:.5s}.dd3{--dd:.8s}.dd4{--dd:1.1s}.dd5{--dd:1.4s}
+.dd6{--dd:1.7s}.dd7{--dd:2.05s}.dd8{--dd:2.4s}.dd9{--dd:2.75s}
+#cal[data-scene="w1"] .wk1 b,#cal[data-scene="w1"] .wk1 span,
+#cal[data-scene="w2"] .wk2 b,#cal[data-scene="w2"] .wk2 span,
+#cal[data-scene="w3"] .wk3 b,#cal[data-scene="w3"] .wk3 span,
+#cal[data-scene="w4"] .wk4 b,#cal[data-scene="w4"] .wk4 span{opacity:1;}
+#cal[data-scene="w1"] .wk1,#cal[data-scene="w2"] .wk2,
+#cal[data-scene="w3"] .wk3,#cal[data-scene="w4"] .wk4{border-color:rgba(2,43,114,.5);}
+/* completed weeks stay marked as the month advances */
+#cal.ge1 .wk1,#cal.ge2 .wk2,#cal.ge3 .wk3,#cal.ge4 .wk4{background:rgba(2,43,114,.05);}
+#cal.ge1 .wk1 i,#cal.ge2 .wk2 i,#cal.ge3 .wk3 i,#cal.ge4 .wk4 i{color:var(--blue);}
+/* phase labels + checkpoints + outcome (visible at month scale) */
+.phl{position:absolute;top:-146px;transition:opacity .6s;}
+.phl u{display:block;text-decoration:none;font-size:34px;font-weight:600;letter-spacing:.16em;color:var(--mut);}
+.phl b{display:block;margin-top:12px;font-size:56px;font-weight:500;letter-spacing:-.02em;color:var(--ink);}
+.pl1{left:0}.pl2{left:1108px}.pl3{left:2216px}.pl4{left:3324px}
+.cpt{position:absolute;top:210px;font-size:34px;font-weight:700;letter-spacing:.14em;color:var(--blue);}
+.cpt1{left:936px}.cpt2{left:2044px}.cpt3{left:3152px}.cpt4{left:4572px}
+.outcome{position:absolute;right:0;top:300px;text-align:right;white-space:nowrap;transition:opacity .6s;}
+.outcome i{display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--blue);margin-right:16px;vertical-align:6px;}
+.outcome b{font-size:44px;font-weight:700;letter-spacing:.12em;color:var(--blue);}
+#cal[data-scene="w1"] .phl,#cal[data-scene="w2"] .phl,#cal[data-scene="w3"] .phl,#cal[data-scene="w4"] .phl,
+#cal[data-scene="w1"] .cpt,#cal[data-scene="w2"] .cpt,#cal[data-scene="w3"] .cpt,#cal[data-scene="w4"] .cpt,
+#cal[data-scene="w1"] .outcome,#cal[data-scene="w2"] .outcome,#cal[data-scene="w3"] .outcome,#cal[data-scene="w4"] .outcome{opacity:0;}
+/* the one system, accumulating capability week over week */
+.sysbar{position:absolute;left:50vw;top:71vh;transform:translateX(-50%);width:min(1150px,88vw);opacity:0;transition:opacity .6s;}
+#cal[data-scene="w1"] .sysbar,#cal[data-scene="w2"] .sysbar,#cal[data-scene="w3"] .sysbar,
+#cal[data-scene="w4"] .sysbar,#cal[data-scene="done"] .sysbar{opacity:1;}
+.sysbar>b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.18em;color:var(--mut);margin-bottom:14px;}
+.sysbar>b.l2{display:none;}
+#cal[data-scene="done"] .sysbar>b.l1{display:none;}
+#cal[data-scene="done"] .sysbar>b.l2{display:block;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{border:1px solid var(--line);padding:7px 13px;font-size:12.5px;color:var(--mut);opacity:0;transform:translateY(8px);transition:opacity .5s ease var(--cd,0s),transform .6s var(--ease) var(--cd,0s),border-color .5s,color .5s;}
+.cc1{--cd:.6s}.cc2{--cd:1s}.cc3{--cd:1.4s}.cc4{--cd:1.8s}.cc5{--cd:2.2s}
+#cal.ge1 .chip.cw1,#cal.ge2 .chip.cw2,#cal.ge3 .chip.cw3,#cal.ge4 .chip.cw4{opacity:1;transform:none;--cd:0s;}
+#cal[data-scene="w1"] .chip.cw1,#cal[data-scene="w2"] .chip.cw2,
+#cal[data-scene="w3"] .chip.cw3,#cal[data-scene="w4"] .chip.cw4{opacity:1;transform:none;color:var(--ink);border-color:rgba(2,43,114,.5);}
+.chip.art{font-weight:600;}
+#cal[data-scene="w4"] .chip.art,#cal[data-scene="done"] .chip.art{color:var(--blue);border-color:var(--blue);opacity:1;transform:none;}
+/* week 3 evaluation flow */
+.evalflow{position:absolute;left:50vw;top:63.5vh;transform:translateX(-50%);font-size:13.5px;letter-spacing:.04em;color:var(--mut);opacity:0;transition:opacity .6s .9s;white-space:nowrap;}
+.evalflow em{font-style:normal;color:var(--blue);font-weight:600;}
+#cal[data-scene="w3"] .evalflow{opacity:1;}
+
+/* ============ S15 month overview ============ */
+#s15 .wrap{padding-top:7.5vh;}
+#s15 .sub{margin-top:16px;}
+#s15 .note{margin-top:12px;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--mut);}
+#s15 .foot{position:absolute;left:7vw;right:7vw;bottom:5.5vh;display:flex;justify-content:space-between;align-items:flex-end;gap:4vw;}
+.pfnote b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.16em;color:var(--mut);}
+.pfchips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.pfchips span{border:1px solid var(--line);padding:6px 11px;font-size:12px;color:var(--ink);}
+
+/* ============ S16–S19 week screens ============ */
+#s16 .wrap,#s17 .wrap,#s18 .wrap,#s19 .wrap{padding-top:7vh;}
+.wkhead{transition:opacity .8s ease;}
+.wk-k{font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--blue);}
+#srun .wk-k{color:var(--blue-b);}
+.wk-h{margin-top:12px;font-size:clamp(26px,3.4vw,44px);line-height:1.06;letter-spacing:-.028em;font-weight:500;text-wrap:balance;}
+.wk-o{margin:12px 0 0;font-size:clamp(13.5px,1.2vw,16.5px);line-height:1.5;color:var(--mut);max-width:46em;}
+/* s19 timed ending: zoom out + closing statement */
+#s19.closing .wkhead{opacity:0;}
+.closefinal{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:10vh;opacity:0;pointer-events:none;transition:opacity 1.1s ease .9s;}
+#s19.closing .closefinal{opacity:1;}
+.closefinal .cline{margin:16px auto 0;font-size:clamp(14px,1.3vw,17.5px);line-height:1.55;color:var(--mut);max-width:40em;}
+.ckrow{display:flex;gap:clamp(20px,3.4vw,54px);margin-top:3.6vh;flex-wrap:wrap;justify-content:center;}
+.ckrow div{text-align:left;}
+.ckrow b{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--blue);}
+.ckrow span{display:block;margin-top:4px;font-size:13.5px;color:var(--ink);}
+
+/* ============ responsive ============ */
+@media (max-width:1340px){
+  #cal{--ovs:.225;}
+}
+@media (max-width:1080px){
+  #cal{--ovs:.19;}
+}
+@media (max-width:960px){
+  .wrap{padding:84px 6vw 56px;}
+  .deck{scroll-snap-type:y mandatory;scroll-behavior:smooth;}
+  .chapters button{font-size:0;padding:6px 5px;}
+  .chapters button::after{content:"";display:block;width:5px;height:5px;border-radius:50%;background:var(--hud-mut);transition:background .35s;}
+  .chapters button.cur::after{background:var(--blue);}
+  .chapters button.cur{border-bottom-color:transparent;}
+  .audit-flow,.eval-grid{grid-template-columns:1fr;gap:26px;}
+  .aarr{display:none;}
+  #cal{display:none;}
+  #s15 .foot{position:static;flex-direction:column;align-items:flex-start;margin-top:24px;}
+  .findings{flex-direction:row;flex-wrap:wrap;gap:8px 16px;}
+  .runrow{flex-direction:column;gap:18px;}
+  .phases{grid-template-columns:1fr;gap:14px;}
+  .split-h,.srow{grid-template-columns:1fr 84px 1fr;}
+  .srows .conv{width:84px;}
+  .fdenode{width:52px;height:52px;font-size:11px;}
+  .chain .arr{padding:14px 12px 0;}
+  .wrap{overflow-y:auto;}
+  .artifact .row,.report .row{grid-template-columns:1fr;gap:3px;}
+  .oprail{display:none;}
+}
+@media (max-height:720px){
+  .wrap{padding-top:78px;}
+  #s10 .wrap,#s12 .wrap,#s13 .wrap{padding-top:70px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important;transition-delay:0ms!important;animation-duration:.01ms!important;animation-delay:0ms!important;}
+  .deck{scroll-behavior:auto;}
+  .cue{animation:none;}
+}
+</style>
+
+<!-- fixed chrome -->
+<header class="hud">
+  <div class="mark">
+    <span class="wm">Aditya Upadhyay</span>
+    <span class="mark-div" aria-hidden="true">|</span>
+    <button type="button" class="present-btn" id="presentBtn" aria-label="Present full screen" aria-pressed="false" title="Present full screen">
+      <svg class="pi-expand" viewBox="0 0 16 16" aria-hidden="true">
+        <polyline points="5,1 1,1 1,5"/><polyline points="11,1 15,1 15,5"/>
+        <polyline points="15,11 15,15 11,15"/><polyline points="1,11 1,15 5,15"/>
+      </svg>
+      <svg class="pi-collapse" viewBox="0 0 16 16" aria-hidden="true">
+        <polyline points="1,5 5,5 5,1"/><polyline points="15,5 11,5 11,1"/>
+        <polyline points="15,11 11,11 11,15"/><polyline points="1,11 5,11 5,15"/>
+      </svg>
+    </button>
+  </div>
+  <nav class="chapters" aria-label="Chapters">
+    <button data-go="1">Why the role exists</button>
+    <button data-go="5">What an FDE is</button>
+    <button data-go="10">Audit</button>
+    <button data-go="12">Evals</button>
+    <button data-go="13">Deployment</button>
+    <button data-go="15">30 Days</button>
+  </nav>
+</header>
+<div class="oprail" id="oprail" aria-hidden="true">
+  <span data-st="0">Audit</span><em></em><span data-st="1">Evals</span><em></em><span data-st="2">Deployment</span>
+</div>
+<div class="pager">
+  <button id="prev" aria-label="Previous section">&#8593;</button>
+  <button id="next" aria-label="Next section">&#8595;</button>
+</div>
+
+<!-- shared intelligence stage (sections 2–4) -->
+<div id="stage" data-scene="" aria-hidden="true">
+  <svg class="links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <path class="lk lk1" pathLength="1" vector-effect="non-scaling-stroke" d="M50,49 L10,65"/>
+    <path class="lk lk2" pathLength="1" vector-effect="non-scaling-stroke" d="M50,49 L30,65"/>
+    <path class="lk lk3" pathLength="1" vector-effect="non-scaling-stroke" d="M50,49 L50,65"/>
+    <path class="lk lk4" pathLength="1" vector-effect="non-scaling-stroke" d="M50,49 L70,65"/>
+    <path class="lk lk5" pathLength="1" vector-effect="non-scaling-stroke" d="M50,49 L90,65"/>
+  </svg>
+  <div class="bline"></div>
+  <div class="bnote">THE SAME CAPABILITY, EVERYWHERE</div>
+  <div class="ylab">ROI</div>
+  <div class="core">
+    <div class="core-disc"></div>
+    <div class="core-label">A FOUNDATIONAL MODEL</div>
+  </div>
+  <div class="copy c1"></div><div class="copy c2"></div><div class="copy c3"></div>
+  <div class="copy c4 win"></div><div class="copy c5"></div>
+  <div class="obar c1"></div><div class="obar c2"></div><div class="obar c3"></div>
+  <div class="obar c4 win"></div><div class="obar c5"></div>
+  <div class="firm f1"><b></b><span>COMPANY 1</span></div>
+  <div class="firm f2"><b></b><span>COMPANY 2</span></div>
+  <div class="firm f3"><b></b><span>COMPANY 3</span></div>
+  <div class="firm f4 win"><b></b><span>COMPANY 4</span></div>
+  <div class="firm f5"><b></b><span>COMPANY 5</span></div>
+</div>
+
+<!-- persistent 30-day calendar (sections 15–19) -->
+<div id="cal" data-scene="" aria-hidden="true">
+  <div class="calstrip">
+    <div class="phl pl1"><u>DAYS 1&ndash;7</u><b>Build the agent</b></div>
+    <div class="phl pl2"><u>DAYS 8&ndash;14</u><b>Make it production-ready</b></div>
+    <div class="phl pl3"><u>DAYS 15&ndash;21</u><b>Measure and optimize</b></div>
+    <div class="phl pl4"><u>DAYS 22&ndash;30</u><b>Communicate and defend</b></div>
+    <div class="days">
+      <div class="cday wk1 dd1"><i>1</i><b>Agent loop</b><span>prompt &rarr; model &rarr; response &rarr; next step, until the task completes or a max-step limit hits</span></div>
+      <div class="cday wk1 dd2"><i>2</i><b>Tool use</b><span>one API call + one web search &mdash; the agent decides when to call them</span></div>
+      <div class="cday wk1 dd3"><i>3</i><b>Guardrails</b><span>input validation &middot; max-step limit &middot; output filtering</span></div>
+      <div class="cday wk1 dd4"><i>4</i><b>Context &amp; memory</b><span>context window by default; external memory only when state must outlive the run</span></div>
+      <div class="cday wk1 dd5"><i>5</i><b>Audit trail</b><span>log every prompt, response, tool call, result, error, and timestamp</span></div>
+      <div class="cday wk1 dd6"><i>6</i><b>Real workflow</b><span>run it on one process that used to be manual &mdash; tie it to a portfolio project</span></div>
+      <div class="cday wk1 dd7 ck"><i>7</i><b>Checkpoint</b><span>a working agent with tools, guardrails, deliberate memory, and a full audit trail</span></div>
+      <div class="cday wk2 dd1 pstart"><i>8</i><b>Structured outputs</b><span>a defined JSON schema, not free-form text</span></div>
+      <div class="cday wk2 dd2"><i>9</i><b>Schema validation</b><span>validate every response; retry or escalate when the structure is invalid</span></div>
+      <div class="cday wk2 dd3"><i>10</i><b>Failure modes</b><span>missing data &middot; malformed responses &middot; dead APIs &middot; timeouts &middot; duplicates &middot; partial completion</span></div>
+      <div class="cday wk2 dd4"><i>11</i><b>Checkpointing</b><span>save state every few steps: task, actions, tool results, pending work, errors</span></div>
+      <div class="cday wk2 dd5"><i>12</i><b>Resume</b><span>stop the agent deliberately; restart it from the last checkpoint</span></div>
+      <div class="cday wk2 dd6"><i>13</i><b>Failure handling</b><span>explicit behavior for tool failure, bad output, incomplete state, unsafe continuation</span></div>
+      <div class="cday wk2 dd7 ck"><i>14</i><b>Checkpoint</b><span>a resumable agent with structured outputs, state recovery, and explicit failure behavior</span></div>
+      <div class="cday wk3 dd1 pstart"><i>15</i><b>Retry logic</b><span>exponential backoff on every external call: 1s &middot; 2s &middot; 4s &middot; 8s &middot; cap at 16s</span></div>
+      <div class="cday wk3 dd2"><i>16</i><b>Failure categories</b><span>missing context &middot; wrong tool &middot; wrong record &middot; invalid output &middot; unsafe action &middot; timeout</span></div>
+      <div class="cday wk3 dd3"><i>17</i><b>Golden dataset</b><span>20 real queries with hand-labeled ideal outputs &mdash; normal, edge, ambiguous, high-risk</span></div>
+      <div class="cday wk3 dd4"><i>18</i><b>Run evals</b><span>correctness &middot; format &middot; tool selection &middot; required steps &middot; escalation behavior</span></div>
+      <div class="cday wk3 dd5"><i>19</i><b>Optimize cost</b><span>cheaper models for simple subtasks &middot; caching &middot; token limits &middot; cost per query</span></div>
+      <div class="cday wk3 dd6"><i>20</i><b>Multi-agent</b><span>only when decomposition helps: one plans &rarr; several execute &rarr; one synthesizes</span></div>
+      <div class="cday wk3 dd7 ck"><i>21</i><b>Checkpoint</b><span>an evaluated agent with known failure modes, measured cost, and a golden dataset</span></div>
+      <div class="cday wk4 dd1 pstart"><i>22</i><b>The pain point</b><span>who does the work, what takes time, where errors occur, what it costs</span></div>
+      <div class="cday wk4 dd2"><i>23</i><b>Why AI belongs</b><span>why not just software &middot; what stays human &middot; where autonomy stops</span></div>
+      <div class="cday wk4 dd3"><i>24</i><b>Architecture</b><span>stack, tools, models, data, memory, guardrails &mdash; and why each exists</span></div>
+      <div class="cday wk4 dd4"><i>25</i><b>Iterations</b><span>what v1 got wrong, what failed, what changed, how it improved</span></div>
+      <div class="cday wk4 dd5"><i>26</i><b>The evals</b><span>dataset, pass rate, failure categories, thresholds, open risks</span></div>
+      <div class="cday wk4 dd6"><i>27</i><b>Economics</b><span>time saved, errors reduced, risk, revenue, cost per query</span></div>
+      <div class="cday wk4 dd7"><i>28</i><b>Rehearse: engineer</b><span>architecture, decisions, failures, tradeoffs</span></div>
+      <div class="cday wk4 dd8"><i>29</i><b>Rehearse: VP</b><span>problem, outcome, evidence, risk &mdash; plain language</span></div>
+      <div class="cday wk4 dd9 ck"><i>30</i><b>Final checkpoint</b><span>a complete FDE case study for engineers and executives alike</span></div>
+    </div>
+    <div class="cpt cpt1">DAY 7</div>
+    <div class="cpt cpt2">DAY 14</div>
+    <div class="cpt cpt3">DAY 21</div>
+    <div class="cpt cpt4">DAY 30</div>
+    <div class="outcome"><i></i><b>A COMPLETE FDE CASE STUDY</b></div>
+  </div>
+  <div class="evalflow">20 cases &rarr; agent runs &rarr; <em>pass / fail evidence</em> &rarr; failure categories &rarr; cost per run</div>
+  <div class="sysbar">
+    <b class="l1">THE SYSTEM &mdash; EVERY WEEK ADDS CAPABILITY TO THE SAME BUILD</b>
+    <b class="l2">THE PORTFOLIO &mdash; WHAT YOU LEAVE WITH</b>
+    <div class="chips">
+      <span class="chip cw1 cc1">agent loop</span>
+      <span class="chip cw1 cc2">two tools</span>
+      <span class="chip cw1 cc3">guardrails</span>
+      <span class="chip cw1 cc4">deliberate memory</span>
+      <span class="chip cw1 cc5">audit trail</span>
+      <span class="chip cw2 cc1">structured outputs</span>
+      <span class="chip cw2 cc2">schema validation</span>
+      <span class="chip cw2 cc3">checkpointed state</span>
+      <span class="chip cw2 cc4">resume after failure</span>
+      <span class="chip cw2 cc5">explicit failure paths</span>
+      <span class="chip cw3 cc1">retries + backoff</span>
+      <span class="chip cw3 cc2">failure taxonomy</span>
+      <span class="chip cw3 cc3">golden dataset</span>
+      <span class="chip cw3 cc4">eval suite</span>
+      <span class="chip cw3 cc5">cost per query</span>
+      <span class="chip cw4 art cc1">workflow audit</span>
+      <span class="chip cw4 art cc2">system architecture</span>
+      <span class="chip cw4 art cc3">evaluation report</span>
+      <span class="chip cw4 art cc4">deployment controls</span>
+      <span class="chip cw4 art cc5">business case</span>
+    </div>
+  </div>
+</div>
+
+<main class="deck" id="deck">
+
+  <!-- 1 · opening -->
+  <section class="sec g-light" id="s01">
+    <div class="wrap">
+      <div class="kicker r">Aditya Upadhyay&rsquo;s guide to</div>
+      <h1 class="hero-h r dl2" style="margin-top:26px">AI Forward Deployed<br>Engineering</h1>
+      <p class="sub r dl5">The blueprint to breaking into FDE in 30 days.</p>
+    </div>
+    <div class="cue">SCROLL &#8595;</div>
+  </section>
+
+  <!-- 2 · intelligence becomes accessible -->
+  <section class="sec g-light" id="s02">
+    <div class="wrap">
+      <h2 class="h-l r">Every company can now buy intelligence.</h2>
+      <p class="sub r dl3">The same foundational capability is becoming available to anyone able to pay for it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · not the moat -->
+  <section class="sec g-light" id="s03">
+    <div class="wrap">
+      <h2 class="h-l r">If everyone can access it, intelligence alone cannot be the moat.</h2>
+    </div>
+  </section>
+
+  <!-- 4 · the advantage moves -->
+  <section class="sec g-light" id="s04">
+    <div class="wrap">
+      <p class="prompt r">So where does the advantage go?</p>
+      <h2 class="h-xl r dl8">Into deployment.</h2>
+      <div class="principle">
+        <p class="sub r dl10">The edge is no longer who has intelligence. It is where, how, and why they use it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · the FDE appears -->
+  <section class="sec g-dark" id="s05">
+    <div class="wrap">
+      <p class="lead r">Someone has to decide where intelligence belongs.</p>
+      <h2 class="h-l r dl7">That person is the forward&nbsp;deployed engineer.</h2>
+      <div class="chain">
+        <div class="node r dl9">
+          <svg class="nglyph" viewBox="0 0 130 46" aria-hidden="true">
+            <polyline points="8,36 32,12 56,30 78,38 112,14"/>
+            <circle cx="8" cy="36" r="3"/><circle cx="32" cy="12" r="3"/><circle cx="56" cy="30" r="3"/>
+            <circle cx="78" cy="38" r="3"/><circle cx="112" cy="14" r="3"/>
+          </svg>
+          <b>Business reality</b>
+          <p>How the work actually happens today &mdash; tools, people, exceptions.</p>
+        </div>
+        <div class="arr r dl10">&#8594;</div>
+        <div class="node hot r dl10">
+          <svg class="nglyph" viewBox="0 0 130 46" aria-hidden="true">
+            <path d="M8,10 L122,36"/>
+            <path d="M8,36 L122,10"/>
+            <circle cx="65" cy="23" r="3.5"/>
+          </svg>
+          <b>FDE judgment</b>
+          <p>Where intelligence belongs, and where it does not.</p>
+        </div>
+        <div class="arr r dl11">&#8594;</div>
+        <div class="node r dl11">
+          <svg class="nglyph" viewBox="0 0 130 46" aria-hidden="true">
+            <rect x="18" y="30" width="14" height="16"/>
+            <rect x="44" y="22" width="14" height="24"/>
+            <rect x="70" y="12" width="14" height="34"/>
+            <rect x="96" y="4" width="14" height="42"/>
+          </svg>
+          <b>Deployed AI system</b>
+          <p>Working software carrying real responsibility inside the business.</p>
+        </div>
+      </div>
+      <p class="sub r dl12">FDEs are in demand because they control how intelligence enters the business.</p>
+    </div>
+  </section>
+
+  <!-- 6 · what an FDE is -->
+  <section class="sec g-light" id="s06">
+    <div class="wrap">
+      <h2 class="h-m r" style="text-align:center;max-width:24em">The role requires two kinds of judgment that rarely exist in one person.</h2>
+      <div class="split">
+        <div class="split-h">
+          <span class="r dl1">The commercial world</span><span></span><span class="r dl2">The technical world</span>
+        </div>
+        <div class="srows">
+          <svg class="conv" viewBox="0 0 130 264" preserveAspectRatio="none" aria-hidden="true">
+            <path class="draw dl3" pathLength="1" d="M8,22 L65,132"/>
+            <path class="draw dl3" pathLength="1" d="M122,22 L65,132"/>
+            <path class="draw dl4" pathLength="1" d="M8,66 L65,132"/>
+            <path class="draw dl4" pathLength="1" d="M122,66 L65,132"/>
+            <path class="draw dl5" pathLength="1" d="M8,110 L65,132"/>
+            <path class="draw dl5" pathLength="1" d="M122,110 L65,132"/>
+            <path class="draw dl5" pathLength="1" d="M8,154 L65,132"/>
+            <path class="draw dl5" pathLength="1" d="M122,154 L65,132"/>
+            <path class="draw dl6" pathLength="1" d="M8,198 L65,132"/>
+            <path class="draw dl6" pathLength="1" d="M122,198 L65,132"/>
+            <path class="draw dl6" pathLength="1" d="M8,242 L65,132"/>
+            <path class="draw dl6" pathLength="1" d="M122,242 L65,132"/>
+          </svg>
+          <div class="srow"><span class="r dl2">workflows</span><i></i><span class="r dl2">models</span></div>
+          <div class="srow"><span class="r dl3">cost</span><i></i><span class="r dl3">systems</span></div>
+          <div class="srow"><span class="r dl3">incentives</span><i></i><span class="r dl3">APIs</span></div>
+          <div class="srow"><span class="r dl4">risk</span><i></i><span class="r dl4">data</span></div>
+          <div class="srow"><span class="r dl4">adoption</span><i></i><span class="r dl4">code</span></div>
+          <div class="srow"><span class="r dl5">business value</span><i></i><span class="r dl5">reliability</span></div>
+          <div class="fdenode">FDE</div>
+        </div>
+      </div>
+      <p class="revline r dl9">The FDE turns <em>business understanding</em> into <em>working software</em>.</p>
+    </div>
+  </section>
+
+  <!-- 7 · understand the current workflow -->
+  <section class="sec g-light" id="s07">
+    <div class="wrap">
+      <h2 class="h-l r">First, understand how the work is really being done.</h2>
+      <p class="sub r dl3">The documented process is rarely the real process.</p>
+      <div class="s07flow r dl2">
+        <button class="stepcard" data-step="email" aria-haspopup="dialog">
+          <span class="stepnum">01</span>
+          <span class="steptext">An email arrives</span>
+          <span class="stepnote">the trigger</span>
+          <span class="stepplus" aria-hidden="true">+</span>
+        </button>
+        <span class="steparrow" aria-hidden="true">&rarr;</span>
+        <button class="stepcard" data-step="sheet" aria-haspopup="dialog">
+          <span class="stepnum">02</span>
+          <span class="steptext">Copied into a spreadsheet</span>
+          <span class="stepnote">re-keyed by hand</span>
+          <span class="stepplus" aria-hidden="true">+</span>
+        </button>
+        <span class="steparrow" aria-hidden="true">&rarr;</span>
+        <button class="stepcard" data-step="system" aria-haspopup="dialog">
+          <span class="stepnum">03</span>
+          <span class="steptext">Checked in an internal system</span>
+          <span class="stepnote">tribal knowledge</span>
+          <span class="stepplus" aria-hidden="true">+</span>
+        </button>
+        <span class="steparrow" aria-hidden="true">&rarr;</span>
+        <button class="stepcard" data-step="slack" aria-haspopup="dialog">
+          <span class="stepnum">04</span>
+          <span class="steptext">Approved in Slack</span>
+          <span class="stepnote">waits on a reply</span>
+          <span class="stepplus" aria-hidden="true">+</span>
+        </button>
+        <span class="steparrow" aria-hidden="true">&rarr;</span>
+        <button class="stepcard" data-step="erp" aria-haspopup="dialog">
+          <span class="stepnum">05</span>
+          <span class="steptext">Entered into the ERP</span>
+          <span class="stepnote">40 required fields</span>
+          <span class="stepplus" aria-hidden="true">+</span>
+        </button>
+      </div>
+      <div class="s07trace r dl7"><span class="ln"></span><span class="lb">the FDE traces every step</span><span class="ln"></span></div>
+      <p class="s07hint r dl9">Click any step &mdash; the &ldquo;simple&rdquo; version hides the real work.</p>
+    </div>
+  </section>
+
+  <!-- 8 · redesign around AI -->
+  <section class="sec g-light" id="s08">
+    <div class="wrap">
+      <h2 class="h-l r" style="max-width:16em">Then decide how the work should operate when intelligence is built into it.</h2>
+      <svg class="diag" viewBox="0 0 1100 470" role="img" aria-label="The same workflow rebuilt: deterministic software handles intake, an agent acts inside the flow, a human approves, evidence is logged, exceptions escalate">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10" fill="none" stroke="#6B7280" stroke-width="1.4"/>
+          </marker>
+        </defs>
+        <!-- exception branch -->
+        <g class="sr dl9">
+          <line x1="425" y1="160" x2="425" y2="96" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 5"/>
+          <rect x="300" y="52" width="250" height="44" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="4 5"/>
+          <text class="nsub" x="425" y="79" text-anchor="middle">an exception escalates to a person</text>
+        </g>
+        <!-- main lane -->
+        <g class="sr dl2">
+          <rect class="nbox" x="58" y="160" width="200" height="66"/>
+          <text class="nlabel" x="158" y="188" text-anchor="middle">Deterministic software</text>
+          <text class="nsub" x="158" y="208" text-anchor="middle">intake &middot; validation &middot; routing</text>
+        </g>
+        <line class="sr dl3" x1="262" y1="193" x2="322" y2="193" stroke="#6B7280" stroke-width="1" marker-end="url(#ah)"/>
+        <g class="sr dl4">
+          <rect x="328" y="160" width="194" height="66" fill="#022B72"/>
+          <text x="425" y="188" text-anchor="middle" style="font-size:15px;font-weight:600;fill:#FFFFFF">The agent acts</text>
+          <text x="425" y="208" text-anchor="middle" style="font-size:12px;fill:rgba(255,255,255,.75)">gathers &middot; decides &middot; drafts</text>
+        </g>
+        <line class="sr dl5" x1="526" y1="193" x2="586" y2="193" stroke="#6B7280" stroke-width="1" marker-end="url(#ah)"/>
+        <g class="sr dl6">
+          <rect class="nbox" x="592" y="160" width="194" height="66"/>
+          <text class="nlabel" x="689" y="188" text-anchor="middle">A human approves</text>
+          <text class="nsub" x="689" y="208" text-anchor="middle">one clear decision</text>
+        </g>
+        <line class="sr dl7" x1="790" y1="193" x2="850" y2="193" stroke="#6B7280" stroke-width="1" marker-end="url(#ah)"/>
+        <g class="sr dl8">
+          <rect class="nbox" x="856" y="160" width="196" height="66"/>
+          <text class="nlabel" x="954" y="188" text-anchor="middle">Record updated</text>
+          <text class="nsub" x="954" y="208" text-anchor="middle">the ERP, without re-keying</text>
+        </g>
+        <!-- evidence rail -->
+        <g class="sr dl10">
+          <line x1="90" y1="330" x2="1020" y2="330" stroke="#6B7280" stroke-width="1"/>
+          <line x1="158" y1="230" x2="158" y2="326" stroke="#6B7280" stroke-width="1" stroke-dasharray="2 5"/>
+          <line x1="425" y1="230" x2="425" y2="326" stroke="#6B7280" stroke-width="1" stroke-dasharray="2 5"/>
+          <line x1="689" y1="230" x2="689" y2="326" stroke="#6B7280" stroke-width="1" stroke-dasharray="2 5"/>
+          <line x1="954" y1="230" x2="954" y2="326" stroke="#6B7280" stroke-width="1" stroke-dasharray="2 5"/>
+          <text x="90" y="362" style="font-size:11px;letter-spacing:.16em;fill:#022B72;font-weight:600">EVIDENCE LOG &mdash; EVERY STEP RECORDED</text>
+        </g>
+      </svg>
+      <p class="def r dl11">An FDE understands the current workflow, designs the AI-native workflow, and <em>builds the system that connects the two</em>.</p>
+    </div>
+  </section>
+
+  <!-- 8b · watch one run -->
+  <section class="sec g-dark" id="srun">
+    <div class="wrap">
+      <div class="wk-k r">ONE RUN &middot; END TO END</div>
+      <div class="theater r dl2">
+        <div class="ingest">
+          <div class="doc" id="thdoc"><b>invoice_0417.pdf</b><i></i><i></i><i></i><i class="short"></i></div>
+          <div class="dropzone" id="thzone"><span class="z1">DROP TO INGEST</span></div>
+          <h2 class="thlede" id="thlede">Finally, the agent can be deployed over the existing systems.</h2>
+        </div>
+        <div class="ststrip">
+          <div class="stp" id="tp1"><em></em><b>Intake validated</b></div>
+          <div class="stln"></div>
+          <div class="stp" id="tp2"><em></em><b>Agent drafts</b></div>
+          <div class="stln"></div>
+          <div class="stp" id="tp3"><em></em><b>Human approves</b></div>
+          <div class="stln"></div>
+          <div class="stp" id="tp4"><em></em><b>Record posted</b></div>
+        </div>
+        <div class="pbar"><i id="thbar"></i></div>
+        <div class="console">
+          <header>RUN LOG</header>
+          <div class="rls">
+            <div class="rl">document received &middot; invoice_0417.pdf</div>
+            <div class="rl">intake &middot; fields parsed, no duplicates found</div>
+            <div class="rl">agent &middot; pulling the matching PO from the ERP</div>
+            <div class="rl">agent &middot; cross-checking contract terms</div>
+            <div class="rl">agent &middot; drafting the record</div>
+            <div class="rl wait">paused &mdash; waiting for human approval</div>
+            <div class="rl ok">approved &middot; by you, just now</div>
+            <div class="rl">posting to the ERP &mdash; no re-keying</div>
+            <div class="rl ok">record posted &middot; evidence log complete</div>
+          </div>
+        </div>
+        <div class="thfoot">
+          <button class="apbtn" id="apbtn" type="button">Approve</button>
+          <p class="runout">&#10003; Record posted &mdash; every step of the run captured in the evidence log.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · the operating model -->
+  <section class="sec g-dark" id="s09">
+    <div class="wrap">
+      <h2 class="h-l r">The job has three parts.</h2>
+      <div class="opseq">
+        <div class="stg r dl3">
+          <b>Audit</b>
+          <p>identifies the right problem and maps reality.</p>
+        </div>
+        <div class="oparr r dl5">&#8594;</div>
+        <div class="stg r dl6">
+          <b>Evals</b>
+          <p>prove the system behaves correctly.</p>
+        </div>
+        <div class="oparr r dl8">&#8594;</div>
+        <div class="stg r dl9">
+          <b>Deployment</b>
+          <p>makes it work inside the business.</p>
+        </div>
+      </div>
+      <p class="foot r dl11">Each stage earns the right to the next.</p>
+    </div>
+  </section>
+
+  <!-- 10 · audit -->
+  <section class="sec g-light" id="s10">
+    <div class="wrap">
+      <h2 class="h-l r">Audit: Find the workflow worth rebuilding.</h2>
+      <p class="sub r dl3" style="margin-top:14px">The audit determines what should be automated before anyone begins building.</p>
+      <div class="audit-flow">
+        <div class="astep">
+          <div class="asnum r dl1"><i>1</i><b>Collect context</b></div>
+          <div class="fragstack">
+            <span class="frag dl2" style="--sx:16vw;--sy:5vh;--sr:5deg">interviews</span>
+            <span class="frag dl2" style="--sx:26vw;--sy:-3vh;--sr:-4deg">emails</span>
+            <span class="frag dl3" style="--sx:9vw;--sy:12vh;--sr:3deg">spreadsheets</span>
+            <span class="frag dl3" style="--sx:30vw;--sy:9vh;--sr:-6deg">SOPs</span>
+            <span class="frag dl4" style="--sx:14vw;--sy:-6vh;--sr:6deg">systems</span>
+            <span class="frag dl4" style="--sx:24vw;--sy:16vh;--sr:-3deg">approvals</span>
+            <span class="frag dl5" style="--sx:33vw;--sy:2vh;--sr:4deg">exception paths</span>
+          </div>
+        </div>
+        <div class="aarr r dl6">&#8594;</div>
+        <div class="astep">
+          <div class="asnum r dl6"><i>2</i><b>Trace FDE findings</b></div>
+          <div class="findings">
+            <span class="r dl7">bottlenecks</span>
+            <span class="r dl7">repetitive work</span>
+            <span class="r dl8">judgment points</span>
+            <span class="r dl8">required systems</span>
+            <span class="r dl9">failure modes</span>
+            <span class="r dl9">automation worth doing</span>
+          </div>
+        </div>
+        <div class="aarr r dl10">&#8594;</div>
+        <div class="astep hot">
+          <div class="asnum r dl10"><i>3</i><b>Produce the operating map</b></div>
+          <div class="artifact r dl11">
+            <header>THE AUDIT ARTIFACT &mdash; ONE OPERATING MAP</header>
+            <div class="row"><b>Current-state workflow</b><span>how the work actually happens today</span></div>
+            <div class="row"><b>Future-state workflow</b><span>the same work, rebuilt around AI</span></div>
+            <div class="row"><b>Selected use case</b><span>one workflow, chosen for value</span></div>
+            <div class="row"><b>Boundaries</b><span>what the system may and may not do</span></div>
+            <div class="row"><b>Expected business value</b><span>hours, cost, and errors &mdash; quantified</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · decide what to automate -->
+  <section class="sec g-light" id="s11">
+    <div class="wrap">
+      <h2 class="h-l r" style="text-align:center;max-width:16em;align-self:center">Decide what should be automated &mdash; and what should not.</h2>
+      <svg class="diag dgm" viewBox="0 0 1100 430" style="margin-top:2.5vh" role="img" aria-label="A decision diagram: each step routes to deterministic software, an agent, or a human in control">
+        <text class="droot sr dl2" x="550" y="46" text-anchor="middle">a step in the audited workflow</text>
+        <line class="dstem draw dl3" pathLength="1" x1="550" y1="62" x2="550" y2="130"/>
+        <path class="dstem draw dl4" pathLength="1" d="M550,130 L200,210"/>
+        <path class="dstem draw dl6" pathLength="1" d="M550,130 L550,210"/>
+        <path class="dstem draw dl8" pathLength="1" d="M550,130 L900,210"/>
+        <g class="sr dl5">
+          <text class="dtitle" x="200" y="250" text-anchor="middle">DETERMINISTIC SOFTWARE</text>
+          <text class="dwhen" x="200" y="278" text-anchor="middle">When the rules and inputs</text>
+          <text class="dwhen" x="200" y="298" text-anchor="middle">are predictable.</text>
+        </g>
+        <g class="sr dl7">
+          <text class="dtitle" x="550" y="250" text-anchor="middle" style="fill:#022B72">AN AGENT</text>
+          <text class="dwhen" x="550" y="278" text-anchor="middle">When the objective is clear but the</text>
+          <text class="dwhen" x="550" y="298" text-anchor="middle">inputs, path, or required actions vary.</text>
+        </g>
+        <g class="sr dl9">
+          <text class="dtitle" x="900" y="250" text-anchor="middle">A HUMAN IN CONTROL</text>
+          <text class="dwhen" x="900" y="278" text-anchor="middle">When the decision carries material ambiguity,</text>
+          <text class="dwhen" x="900" y="298" text-anchor="middle">accountability, or irreversible consequences.</text>
+        </g>
+      </svg>
+      <p class="principle r dl11" style="align-self:center">Prioritize lengthy, high-volume workflows where the improvement is large enough to matter.</p>
+    </div>
+  </section>
+
+  <!-- 12 · evals -->
+  <section class="sec g-light" id="s12">
+    <div class="wrap">
+      <h2 class="h-l r">Evals: Turn non-determinism into evidence.</h2>
+      <div class="eval-grid">
+        <div class="cases">
+          <header class="sr dl2">THE EVALUATION CASES</header>
+          <div class="chead sr dl2"></div>
+          <div class="chead mk sr dl2">Right data</div>
+          <div class="chead mk sr dl2">Required steps</div>
+          <div class="chead mk sr dl2">Matches expert</div>
+          <div class="chead mk sr dl2">Safe to act</div>
+
+          <div class="cname sr dl3">The normal case</div>
+          <div class="mk ok sr dl3">&#10003;</div><div class="mk ok sr dl3">&#10003;</div>
+          <div class="mk ok sr dl3">&#10003;</div><div class="mk ok sr dl3">&#10003;</div>
+
+          <div class="cname sr dl4">The edge case</div>
+          <div class="mk ok sr dl4">&#10003;</div><div class="mk ok sr dl4">&#10003;</div>
+          <div class="mk no sr dl4">&#10007;</div><div class="mk no sr dl4">&#10007;</div>
+
+          <div class="cname sr dl5">Incomplete information</div>
+          <div class="mk no sr dl5">&#10007;</div><div class="mk dash sr dl5">&mdash;</div>
+          <div class="mk dash sr dl5">&mdash;</div><div class="mk esc sr dl5">&#8594; human</div>
+
+          <div class="cname sr dl6">An ambiguous request</div>
+          <div class="mk ok sr dl6">&#10003;</div><div class="mk no sr dl6">&#10007;</div>
+          <div class="mk dash sr dl6">&mdash;</div><div class="mk esc sr dl6">&#8594; human</div>
+
+          <div class="cname sr dl7">A high-risk action</div>
+          <div class="mk ok sr dl7">&#10003;</div><div class="mk ok sr dl7">&#10003;</div>
+          <div class="mk ok sr dl7">&#10003;</div><div class="mk esc sr dl7">&#8594; human</div>
+
+          <div class="legend sr dl8">&#10003; expected behavior &nbsp;&middot;&nbsp; &#10007; failure, with the evidence kept &nbsp;&middot;&nbsp; &#8594; human&nbsp; escalated by rule</div>
+        </div>
+        <div class="evreport r dl9">
+          <header>THE EVALUATION REPORT</header>
+          <div class="evblock">
+            <div class="evlabel">Pass rate</div>
+            <div class="evpassnum"><b>41<em>/ 50</em></b><span>graded runs passed &mdash; 82%</span></div>
+            <div class="evbar"><i></i></div>
+          </div>
+          <div class="evblock">
+            <div class="evlabel">Failure categories &mdash; 9 runs</div>
+            <div class="evrow"><span>missing data</span><i style="--w:100%"></i><b>5</b></div>
+            <div class="evrow"><span>wrong record pulled</span><i style="--w:80%"></i><b>4</b></div>
+          </div>
+          <div class="evblock">
+            <div class="evlabel">Operating rules</div>
+            <div class="evrule"><b>CONFIDENCE</b><span>below 0.80, the system must escalate</span></div>
+            <div class="evrule"><b>ESCALATION</b><span>high-risk actions always reach a person</span></div>
+            <div class="evrule"><b>READINESS</b><span>pilot &mdash; with human review on every action</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · deployment -->
+  <section class="sec g-light" id="s13">
+    <div class="wrap">
+      <h2 class="h-l r">Deployment: Make it work inside the business.</h2>
+      <svg class="diag dep" viewBox="0 0 1100 400" style="margin-top:2vh;max-height:38vh" role="img" aria-label="A prototype system connecting to existing data, APIs, identity, a sandbox, human review, logs, alerts, rollback, and finally production users">
+        <!-- wave 1: integrate -->
+        <g class="sr dl3">
+          <text class="sat" x="150" y="128" text-anchor="end">existing data</text>
+          <text class="sat" x="150" y="200" text-anchor="end">internal APIs</text>
+          <text class="sat" x="150" y="272" text-anchor="end">identity &amp; permissions</text>
+          <line class="satline" x1="168" y1="124" x2="440" y2="168"/>
+          <line class="satline" x1="168" y1="196" x2="440" y2="196"/>
+          <line class="satline" x1="168" y1="268" x2="440" y2="226"/>
+        </g>
+        <!-- sandbox (wave 2, fades at wave 3) -->
+        <g class="sbxg">
+          <rect x="404" y="106" width="292" height="184" fill="none" stroke="rgba(2,43,114,.5)" stroke-width="1" stroke-dasharray="6 6"/>
+          <text x="416" y="94" style="font-size:11px;letter-spacing:.16em;fill:rgba(2,43,114,.5);font-weight:600">SANDBOX</text>
+        </g>
+        <!-- wave 2 satellites -->
+        <g class="sr dl8">
+          <text class="sat" x="950" y="106">human review</text>
+          <text class="sat" x="950" y="164">logs</text>
+          <text class="sat" x="950" y="222">alerts</text>
+          <text class="sat" x="950" y="280">rollback</text>
+          <line class="satline" x1="936" y1="102" x2="660" y2="164"/>
+          <line class="satline" x1="936" y1="160" x2="660" y2="186"/>
+          <line class="satline" x1="936" y1="218" x2="660" y2="208"/>
+          <line class="satline" x1="936" y1="276" x2="660" y2="230"/>
+        </g>
+        <!-- wave 3: production users -->
+        <g class="sr dl12">
+          <text class="sat" x="550" y="38" text-anchor="middle" style="fill:#022B72;font-weight:600">production users</text>
+          <line class="satline" x1="550" y1="48" x2="550" y2="140" style="stroke:#022B72"/>
+        </g>
+        <!-- the system -->
+        <g class="sr dl1 w3on">
+          <rect class="sysbox" x="454" y="146" width="192" height="104"/>
+          <text x="550" y="192" text-anchor="middle" style="font-size:14px;font-weight:600;fill:#022B72;letter-spacing:.06em">THE SYSTEM</text>
+          <text class="protolabel" x="550" y="216" text-anchor="middle" style="font-size:11px;letter-spacing:.14em;fill:rgba(2,43,114,.5)">PROTOTYPE</text>
+          <text class="prodlabel" x="550" y="216" text-anchor="middle" style="font-size:11px;letter-spacing:.14em;fill:#022B72;font-weight:600">IN PRODUCTION</text>
+        </g>
+      </svg>
+      <div class="phases">
+        <div class="phase r dl4"><b><i>1</i>Integrate with what already exists</b>
+          <p>Build over the current data and systems rather than beginning with a large replacement project.</p></div>
+        <div class="phase r dl8"><b><i>2</i>Test inside a controlled environment</b>
+          <p>Use a sandbox within the company&rsquo;s infrastructure to run, inspect, and debug safely.</p></div>
+        <div class="phase r dl12"><b><i>3</i>Increase autonomy gradually</b>
+          <p>Begin with the smallest useful action and grant more authority only after the system proves reliable.</p></div>
+      </div>
+      <p class="final r dl13">Deployment is where software begins carrying operational responsibility.</p>
+    </div>
+  </section>
+
+  <!-- 14 · the complete loop -->
+  <section class="sec g-light" id="s14">
+    <div class="wrap">
+      <div class="loop">
+        <b class="r dl1">Audit</b><i class="r dl2">&#8594;</i>
+        <span class="r dl2">Build</span><i class="r dl3">&#8594;</i>
+        <b class="r dl3">Evals</b><i class="r dl4">&#8594;</i>
+        <b class="r dl4">Deploy</b><i class="r dl5">&#8594;</i>
+        <span class="r dl5">Observe</span><i class="r dl6">&#8594;</i>
+        <span class="r dl6">Improve</span>
+      </div>
+      <svg class="loopback" viewBox="0 0 680 54" aria-hidden="true">
+        <path class="draw dl7" pathLength="1" d="M660,6 C660,44 20,44 20,10" stroke-width="1"/>
+        <path class="sr dl8 lbarrow" d="M13,18 L20,10 L27,18" fill="none"/>
+        <text class="sr dl8" x="340" y="50" text-anchor="middle">THE LOOP RUNS AGAIN</text>
+      </svg>
+      <h2 class="h-l r dl8">An FDE owns the path from messy workflow to <span class="blue">trusted production system</span>.</h2>
+    </div>
+    <div class="cue" style="color:var(--blue)">THE 30-DAY PLAN &#8595;</div>
+  </section>
+
+  <!-- 15 · the 30-day roadmap · month overview -->
+  <section class="sec g-light" id="s15">
+    <div class="wrap">
+      <div class="kicker r">The 30-day roadmap</div>
+      <h2 class="h-l r dl2" style="margin-top:14px">How to become an FDE in 30 days.</h2>
+      <p class="sub r dl4">Most successful FDE candidates come from consulting, product management, or software engineering.</p>
+      <p class="note r dl5">COMPLETE THIS ROADMAP IN PARALLEL WITH APPLYING AND INTERVIEWING</p>
+      <div class="foot">
+        <div class="pfnote r dl9">
+          <b>CONSULTANTS AND PMS &mdash; CHOOSE TWO PROJECTS AND TAKE THEM DEEP</b>
+          <div class="pfchips">
+            <span>Production-ready AI agent</span><span>RAG pipeline</span><span>Eval framework</span><span>MCP integration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 · week 1 · build the agent -->
+  <section class="sec g-light" id="s16">
+    <div class="wrap">
+      <div class="wkhead">
+        <div class="wk-k r">WEEK 1 &middot; DAYS 1&ndash;7</div>
+        <h2 class="wk-h r dl2">Week 1: Build an agent that can complete a real loop.</h2>
+        <p class="wk-o r dl3">By Day 7, the agent should complete one useful workflow and expose every step it takes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 · week 2 · survive production -->
+  <section class="sec g-light" id="s17">
+    <div class="wrap">
+      <div class="wkhead">
+        <div class="wk-k r">WEEK 2 &middot; DAYS 8&ndash;14</div>
+        <h2 class="wk-h r dl2">Week 2: Turn the demo into a system that can recover.</h2>
+        <p class="wk-o r dl3">By Day 14, the agent should produce predictable outputs and resume after failure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 · week 3 · measure and optimize -->
+  <section class="sec g-light" id="s18">
+    <div class="wrap">
+      <div class="wkhead">
+        <div class="wk-k r">WEEK 3 &middot; DAYS 15&ndash;21</div>
+        <h2 class="wk-h r dl2">Week 3: Make the system measurable and economically viable.</h2>
+        <p class="wk-o r dl3">By Day 21, you should know how the system fails, how much it costs, and whether it is improving.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · final week · communicate and defend, then close -->
+  <section class="sec g-light" id="s19">
+    <div class="wrap">
+      <div class="wkhead">
+        <div class="wk-k r">FINAL WEEK &middot; DAYS 22&ndash;30</div>
+        <h2 class="wk-h r dl2">Final week: Defend the system like an FDE.</h2>
+        <p class="wk-o r dl3">By Day 30, you should be able to explain the system to both an engineer and a non-technical executive.</p>
+      </div>
+    </div>
+    <div class="closefinal">
+      <h2 class="h-l">Do the job before you have the title.</h2>
+      <p class="cline">On Day 30, you should not merely understand forward deployed engineering. You should have evidence that you can do it.</p>
+      <div class="ckrow">
+        <div><b>DAY 7</b><span>Working agent</span></div>
+        <div><b>DAY 14</b><span>Recoverable system</span></div>
+        <div><b>DAY 21</b><span>Evaluated system</span></div>
+        <div><b>DAY 30</b><span>Complete FDE case study</span></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  var deck=document.getElementById('deck');
+  var secs=Array.prototype.slice.call(document.querySelectorAll('.sec'));
+  var stage=document.getElementById('stage');
+  var oprail=document.getElementById('oprail');
+  var railSpans=oprail.querySelectorAll('span');
+  var navBtns=Array.prototype.slice.call(document.querySelectorAll('.chapters button'));
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  var active=0;
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var cal=document.getElementById('cal');
+  var calTimer=null,lastRevealed=false;
+  var SCENES={1:'spread',2:'flatten',3:'deploy'};
+  // persistent calendar scenes + week rank per section
+  var CALS={15:'month',16:'w1',17:'w2',18:'w3',19:'w4'};
+  var CALWK={15:0,16:1,17:2,18:3,19:4};
+  var DARK={4:1,8:1,9:1};
+  // chapter index for each section
+  var CHAP=[-1,0,0,0,0,1,1,1,1,1,2,2,3,4,4,5,5,5,5,5];
+  // oprail: visible for 10–13; active stage per section
+  var RAIL={10:0,11:0,12:1,13:2};
+
+  // ---- "watch one run" theater: a scripted clock, paused at the human gate ----
+  var apbtn=document.getElementById('apbtn');
+  var thdoc=document.getElementById('thdoc');
+  var thzone=document.getElementById('thzone');
+  var thlede=document.getElementById('thlede');
+  var thbar=document.getElementById('thbar');
+  var rls=Array.prototype.slice.call(document.querySelectorAll('#srun .rl'));
+  var runout=document.querySelector('#srun .runout');
+  var runTimer=null,advTimer=null,runPhase='idle';
+  function tp8(n,cls){var g=document.getElementById('tp'+n);if(!g)return;g.classList.remove('cur','wait');if(cls)g.classList.add(cls);}
+  function rl8(n){if(rls[n])rls[n].classList.add('on');}
+  function bar8(w,ms){thbar.style.transition=ms?('width '+ms+'ms linear'):'none';thbar.style.width=w;}
+  function playCues(cues,done){
+    clearInterval(runTimer);
+    var t0=Date.now();var fired=cues.map(function(){return false;});
+    runTimer=setInterval(function(){
+      var el=Date.now()-t0,all=true;
+      cues.forEach(function(c,ci){
+        if(!fired[ci]){if(el>=c.at){fired[ci]=true;c.go();}else{all=false;}}
+      });
+      if(all){clearInterval(runTimer);runTimer=null;if(done)done();}
+    },33);
+  }
+  function s08Reset(){
+    clearInterval(runTimer);runTimer=null;clearTimeout(advTimer);advTimer=null;runPhase='idle';
+    for(var n=1;n<=4;n++){var g=document.getElementById('tp'+n);if(g)g.classList.remove('cur','wait','done');}
+    thdoc.classList.remove('fly','absorb');thzone.classList.remove('gone');thlede.classList.remove('on');
+    bar8('0%',0);
+    rls.forEach(function(l){l.classList.remove('on');});
+    apbtn.classList.remove('show');runout.classList.remove('on');
+  }
+  function s08Land(){
+    s08Reset();runPhase='landed';
+    thdoc.classList.add('fly');thdoc.classList.add('absorb');thzone.classList.add('gone');thlede.classList.add('on');
+    for(var n=1;n<=4;n++){tp8(n,'done');}
+    bar8('100%',0);
+    rls.forEach(function(l){l.classList.add('on');});
+    runout.classList.add('on');
+  }
+  function s08Finish(){
+    runPhase='final';apbtn.classList.remove('show');
+    bar8('100%',1500);
+    playCues([
+      {at:0,   go:function(){rl8(6);tp8(3,'done');}},
+      {at:450, go:function(){tp8(4,'cur');rl8(7);}},
+      {at:1300,go:function(){tp8(4,'done');rl8(8);runout.classList.add('on');runPhase='landed';
+        // the run ends and the deck moves on by itself
+        advTimer=setTimeout(function(){if(active===8){goTo(9);}},1600);}}
+    ]);
+  }
+  function s08Run(fast){
+    var d=fast?250:1500;
+    runPhase='auto';
+    playCues([
+      {at:d,      go:function(){thdoc.classList.add('fly');}},
+      {at:d+1350, go:function(){thzone.classList.add('gone');thdoc.classList.add('absorb');thlede.classList.add('on');rl8(0);}},
+      {at:d+2000, go:function(){tp8(1,'cur');rl8(1);bar8('58%',3000);}},
+      {at:d+2900, go:function(){tp8(1,'done');tp8(2,'cur');rl8(2);}},
+      {at:d+3600, go:function(){rl8(3);}},
+      {at:d+4300, go:function(){rl8(4);}},
+      {at:d+5000, go:function(){tp8(2,'done');tp8(3,'wait');rl8(5);apbtn.classList.add('show');runPhase='wait';}}
+    ]);
+  }
+  function s08Start(){
+    s08Reset();
+    if(reduced){s08Land();}else{s08Run(false);}
+  }
+  apbtn.addEventListener('click',function(){if(runPhase==='wait'){s08Finish();}});
+
+  function setActive(i){
+    if(i===active && secs[i].classList.contains('on')) return;
+    active=i;
+    secs[i].classList.add('on');
+    document.body.dataset.ground=DARK[i]?'dark':'light';
+    // stage
+    if(SCENES[i]!==undefined){stage.classList.add('show');stage.dataset.scene=SCENES[i];}
+    else{stage.classList.remove('show');}
+    // calendar
+    clearTimeout(calTimer);
+    secs[secs.length-1].classList.remove('closing');
+    if(CALS[i]!==undefined){
+      cal.classList.add('show');cal.dataset.scene=CALS[i];
+      for(var w=1;w<=4;w++){cal.classList.toggle('ge'+w,CALWK[i]>w);}
+      if(i===secs.length-1){
+        // land on the final-week view; the zoom-out to the full month waits for a manual down press
+        lastRevealed=false;
+      }
+    }else{cal.classList.remove('show');}
+    // "watch one run" theater
+    if(i===8){s08Start();}else{s08Reset();}
+    // nav
+    navBtns.forEach(function(b,bi){b.classList.toggle('cur',bi===CHAP[i]);});
+    // rail
+    if(RAIL[i]!==undefined){
+      oprail.classList.add('show');
+      railSpans.forEach(function(s,si){s.classList.toggle('cur',si===RAIL[i]);});
+    }else{oprail.classList.remove('show');}
+    prev.disabled=(i===0);
+    next.disabled=(i===secs.length-1)&&lastRevealed;
+    if(rafId===null)curIndex=i;
+  }
+
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      var i=secs.indexOf(e.target);
+      if(e.intersectionRatio>=0.6){setActive(i);}
+      else if(!e.isIntersecting){e.target.classList.remove('on');}
+    });
+  },{root:deck,threshold:[0,0.6]});
+  secs.forEach(function(s){io.observe(s);});
+
+  // page-to-page scroll — retargets mid-flight so you can hammer the keys
+  var curIndex=0,rafId=null,aFrom=0,aDist=0,aT0=null,aDur=450,aTarget=0;
+  function step(ts){
+    if(aT0===null)aT0=ts;
+    var p=Math.min(1,(ts-aT0)/aDur);
+    var e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+    deck.scrollTop=aFrom+aDist*e;
+    if(p<1){rafId=requestAnimationFrame(step);}
+    else{rafId=null;deck.scrollTop=aTarget;}
+  }
+  function animScroll(top,dur){
+    aFrom=deck.scrollTop;aDist=top-aFrom;aTarget=top;aT0=null;aDur=dur;
+    if(Math.abs(aDist)<2&&rafId===null)return;
+    if(rafId===null)rafId=requestAnimationFrame(step);
+  }
+  function goTo(i){
+    i=Math.max(0,Math.min(secs.length-1,i));
+    curIndex=i;
+    if(reduced){deck.scrollTop=secs[i].offsetTop;return;}
+    animScroll(secs[i].offsetTop,450);
+  }
+  // final slide has two states: final-week view, then a MANUAL zoom-out to the full month
+  function revealDone(){
+    cal.dataset.scene='done';
+    for(var w=1;w<=4;w++){cal.classList.add('ge'+w);}
+    secs[secs.length-1].classList.add('closing');
+    lastRevealed=true;next.disabled=true;
+  }
+  function lastFinalWeek(){
+    var L=secs.length-1;
+    cal.dataset.scene=CALS[L];
+    for(var w=1;w<=4;w++){cal.classList.toggle('ge'+w,CALWK[L]>w);}
+    secs[L].classList.remove('closing');
+    lastRevealed=false;next.disabled=false;
+  }
+  function nav(dir){
+    var L=secs.length-1;
+    if(dir>0){
+      if(curIndex>=L){if(!lastRevealed)revealDone();return;}
+      goTo(curIndex+1);
+    }else{
+      if(curIndex>=L&&lastRevealed){lastFinalWeek();return;}
+      goTo(curIndex-1);
+    }
+  }
+  // wheel: exactly one slide per gesture. The lock holds until the wheel goes
+  // quiet, so trackpad/inertia momentum can't blow past several slides at once.
+  var wheelLock=false,wheelTimer=null;
+  deck.addEventListener('wheel',function(ev){
+    if(window.innerWidth<=960)return;
+    ev.preventDefault();
+    if(window.__stepModalOpen)return;
+    if(Math.abs(ev.deltaY)<10)return;
+    // every event (including the momentum tail) pushes the unlock further out
+    clearTimeout(wheelTimer);
+    wheelTimer=setTimeout(function(){wheelLock=false;},360);
+    if(wheelLock)return;
+    wheelLock=true;
+    nav(ev.deltaY>0?1:-1);
+  },{passive:false});
+  prev.addEventListener('click',function(){nav(-1);});
+  next.addEventListener('click',function(){nav(1);});
+  navBtns.forEach(function(b){
+    b.addEventListener('click',function(){goTo(parseInt(b.dataset.go,10));});
+  });
+  window.addEventListener('keydown',function(ev){
+    if(ev.target.tagName==='INPUT'||ev.target.tagName==='TEXTAREA')return;
+    if(window.__stepModalOpen)return;
+    var onBtn=ev.target.tagName==='BUTTON';
+    if(ev.key==='ArrowDown'||ev.key==='PageDown'||(ev.key===' '&&!onBtn)){ev.preventDefault();nav(1);}
+    else if(ev.key==='ArrowUp'||ev.key==='PageUp'){ev.preventDefault();nav(-1);}
+    else if(ev.key==='Home'){ev.preventDefault();goTo(0);}
+    else if(ev.key==='End'){ev.preventDefault();goTo(secs.length-1);}
+  });
+  window.__fde={go:goTo,set:setActive};
+  setActive(0);
+})();
+</script>
+
+<!-- step detail modal (s07) -->
+<div id="mstep" class="mstep" aria-hidden="true">
+  <div class="mstep-scrim" data-close></div>
+  <div class="mstep-card" role="dialog" aria-modal="true" aria-labelledby="mstep-title">
+    <button class="mstep-x" data-close aria-label="Close">&times;</button>
+    <span class="mstep-tag" id="mstep-tag"></span>
+    <h3 class="mstep-title" id="mstep-title"></h3>
+    <p class="mstep-punch" id="mstep-punch"></p>
+    <p class="mstep-sub">What that actually involves</p>
+    <ul class="mstep-points" id="mstep-points"></ul>
+    <div class="mstep-fde"><span>Why this is a person, not a script</span><p id="mstep-fde"></p></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var DATA={
+    email:{tag:'Step 01 · The trigger',title:'“An email arrives”',
+      punch:'Sounds like a clean trigger. It’s a swamp.',
+      points:[
+        'It arrives from 40+ senders and no two are formatted alike — data in the body, in a PDF, in a screenshot, or buried in a forwarded thread six replies deep.',
+        'Half of them are exceptions in disguise: “same as last time,” “ignore the second attachment,” “Sarah already signed off on this one.”',
+        'There’s no consistent subject line, so the routing logic — what’s urgent, what’s a duplicate, what to drop — lives entirely in one person’s head.'],
+      fde:'Before a line of code gets written, someone has to sit next to the person who reads these all day and learn the 30 unwritten rules for what actually counts. That discovery IS the job.'},
+    sheet:{tag:'Step 02 · Re-keyed by hand',title:'“Copied into a spreadsheet”',
+      punch:'Which spreadsheet? There are four.',
+      points:[
+        'One is the “real” one, two are stale, and one is a personal copy on someone’s desktop that quietly disagrees with the rest.',
+        'Columns drift — a field someone added in March silently broke three downstream formulas that nobody owns anymore.',
+        'It’s re-keyed by hand, so a typo doesn’t throw an error — it just becomes the new source of truth.',
+        '“Data validation” is a shared belief, not a rule the file actually enforces.'],
+      fde:'The spreadsheet is a database, a workflow engine, and an audit log all wearing a grid costume. You have to reverse-engineer all three before you can safely replace any of them.'},
+    system:{tag:'Step 03 · Tribal knowledge',title:'“Checked in an internal system”',
+      punch:'The system that has no API.',
+      points:[
+        'Login is behind a VPN, the UI hasn’t changed since 2009, and there is no export button.',
+        'The field labeled “Status” means five different things depending on who set it and when.',
+        'The real check is tribal: “you just have to know that region 4 always needs a second look.”',
+        'The one person who understands the edge cases is retiring in eight months.'],
+      fde:'The knowledge isn’t in the system — it’s in the operator. An FDE’s job is to capture it into something durable before it walks out the door for good.'},
+    slack:{tag:'Step 04 · Waits on a reply',title:'“Approved in Slack”',
+      punch:'An approval with no paper trail.',
+      points:[
+        '“Approval” might be a 👍 in a DM, an “lgtm” in a thread, or a verbal yes in a huddle — sometimes all three, sometimes none.',
+        'The approver is out half the time, and the escalation rule (“ping Dave if it’s over $50k”) is unwritten and inconsistently followed.',
+        'There’s no record of who approved what, when, or on what basis — until an auditor asks, and then it’s a very bad week.'],
+      fde:'Turning a thumbs-up into an auditable control — who, what, when, on what evidence — is most of what risk and compliance teams actually care about. That’s not a Slack bot; that’s design.'},
+    erp:{tag:'Step 05 · Where automation goes to die',title:'“Entered into the ERP”',
+      punch:'Forty required fields and a prayer.',
+      points:[
+        'The ERP demands ~40 fields. The email gave you six. The other 34 come from memory, lookup tables, and “just leave it blank, it usually works.”',
+        'The mapping rules are undocumented, and some values need transformation that nobody ever wrote down.',
+        'Errors don’t surface now — they show up days later in a reconciliation report someone reads on Fridays. Maybe.'],
+      fde:'The last step is where “simple automation” quietly falls apart. Getting it right means modeling every rule the ERP silently assumes — the ones no one can even tell you until it breaks.'}
+  };
+  var m=document.getElementById('mstep');
+  if(!m)return;
+  var elTag=document.getElementById('mstep-tag'),elTitle=document.getElementById('mstep-title'),
+      elPunch=document.getElementById('mstep-punch'),elPoints=document.getElementById('mstep-points'),
+      elFde=document.getElementById('mstep-fde'),elCard=m.querySelector('.mstep-card'),lastFocus=null;
+  function openModal(key){
+    var d=DATA[key];if(!d)return;
+    elTag.textContent=d.tag;elTitle.textContent=d.title;elPunch.textContent=d.punch;elFde.textContent=d.fde;
+    elPoints.innerHTML='';
+    d.points.forEach(function(p){var li=document.createElement('li');li.textContent=p;elPoints.appendChild(li);});
+    elCard.scrollTop=0;
+    m.classList.add('open');m.setAttribute('aria-hidden','false');
+    window.__stepModalOpen=true;
+    lastFocus=document.activeElement;
+    m.querySelector('.mstep-x').focus();
+  }
+  function closeModal(){
+    m.classList.remove('open');m.setAttribute('aria-hidden','true');
+    window.__stepModalOpen=false;
+    if(lastFocus&&lastFocus.focus)lastFocus.focus();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.stepcard'),function(c){
+    c.addEventListener('click',function(){openModal(c.dataset.step);});
+  });
+  Array.prototype.forEach.call(m.querySelectorAll('[data-close]'),function(x){
+    x.addEventListener('click',closeModal);
+  });
+  document.addEventListener('keydown',function(ev){
+    if(ev.key==='Escape'&&window.__stepModalOpen){ev.preventDefault();closeModal();}
+  },true);
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var el=document.documentElement;
+  var btn=document.getElementById('presentBtn');
+  if(!btn)return;
+
+  function fsElement(){
+    return document.fullscreenElement||document.webkitFullscreenElement||
+           document.mozFullScreenElement||document.msFullscreenElement||null;
+  }
+  function fsEnabled(){
+    return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled||
+              document.mozFullScreenEnabled||document.msFullscreenEnabled);
+  }
+  function requestFS(node){
+    var fn=node.requestFullscreen||node.webkitRequestFullscreen||
+           node.mozRequestFullScreen||node.msRequestFullscreen;
+    if(!fn)return;
+    try{
+      var p=fn.call(node);
+      if(p&&p.catch)p.catch(function(){});
+    }catch(e){}
+  }
+  function exitFS(){
+    var fn=document.exitFullscreen||document.webkitExitFullscreen||
+           document.mozCancelFullScreen||document.msExitFullscreen;
+    if(!fn)return;
+    try{
+      var p=fn.call(document);
+      if(p&&p.catch)p.catch(function(){});
+    }catch(e){}
+  }
+
+  if(!fsEnabled()){return;}
+  btn.classList.add('ready');
+
+  function syncState(){
+    var on=!!fsElement();
+    btn.classList.toggle('on',on);
+    btn.setAttribute('aria-pressed',on?'true':'false');
+    btn.title=on?'Exit full screen':'Present full screen';
+    btn.setAttribute('aria-label',btn.title);
+  }
+
+  btn.addEventListener('click',function(){
+    if(fsElement()){exitFS();}else{requestFS(el);}
+  });
+
+  ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange']
+    .forEach(function(evt){document.addEventListener(evt,syncState);});
+
+  syncState();
+})();
+</script>
+
+</body>
+</html>
